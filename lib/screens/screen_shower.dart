@@ -11,36 +11,33 @@ class ScreenShower extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: const NavBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<AppStore>().setTheme(ThemeEnum.dark);
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Observer(
-            warnWhenNoObservables: true,
-            builder: (context) {
-              final isLoggedIn = context.read<AppStore>().isLoggedIn;
-              if (!isLoggedIn) return const Login();
-              return IndexedStack(
-                index: context.read<AppStore>().navStore.selectedScreenIndex,
-                children: Utils.navItems.map(
-                  (e) {
-                    return e.screen;
-                  },
-                ).toList(),
-              );
-            },
+    return Observer(builder: (context) {
+      final isLoggedIn = context.read<AppStore>().isLoggedIn;
+      if (!isLoggedIn) return const Login();
+      return Scaffold(
+        bottomNavigationBar: const NavBar(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            context.read<AppStore>().setTheme(ThemeEnum.dark);
+          },
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ),
+        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: IndexedStack(
+              index: context.read<AppStore>().navStore.selectedScreenIndex,
+              children: Utils.navItems.map(
+                (e) {
+                  return e.screen;
+                },
+              ).toList(),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

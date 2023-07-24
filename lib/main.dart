@@ -1,13 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:remainder/firebase_options.dart';
 import 'package:remainder/screens/screen_shower.dart';
 import 'package:remainder/stores/app_store.dart';
-import 'package:remainder/stores/nav_store.dart';
 import 'package:remainder/utils.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -30,6 +35,67 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: theme == ThemeEnum.light
                 ? ThemeData(
+                    inputDecorationTheme: InputDecorationTheme(
+                      disabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      labelStyle: GoogleFonts.quicksand(),
+                      hintStyle: GoogleFonts.quicksand(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    textTheme: TextTheme(
+                      labelLarge: GoogleFonts.quicksand(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      bodyLarge: GoogleFonts.quicksand(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      labelMedium: GoogleFonts.quicksand(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    iconButtonTheme: IconButtonThemeData(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Color(
+                            0xff6a52d8,
+                          ),
+                        ),
+                        textStyle: MaterialStateProperty.all(
+                          GoogleFonts.quicksand(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Color(
+                              0xff6a52d8,
+                            ),
+                          ),
+                          textStyle: MaterialStateProperty.all(
+                            GoogleFonts.quicksand(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          )),
+                    ),
                     bottomNavigationBarTheme:
                         const BottomNavigationBarThemeData(
                       enableFeedback: false,
@@ -58,6 +124,74 @@ class MyApp extends StatelessWidget {
                     useMaterial3: true,
                   )
                 : ThemeData(
+                    inputDecorationTheme: InputDecorationTheme(
+                      disabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      labelStyle: GoogleFonts.quicksand(
+                        color: Colors.white,
+                      ),
+                      hintStyle: GoogleFonts.quicksand(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    textTheme: TextTheme(
+                      labelLarge: GoogleFonts.quicksand(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      bodyLarge: GoogleFonts.quicksand(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      labelMedium: GoogleFonts.quicksand(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    iconButtonTheme: IconButtonThemeData(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Color(
+                            0xffc6c9ff,
+                          ),
+                        ),
+                        textStyle: MaterialStateProperty.all(
+                          GoogleFonts.quicksand(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Color(
+                            0xffc6c9ff,
+                          ),
+                        ),
+                        textStyle: MaterialStateProperty.all(
+                          GoogleFonts.quicksand(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    iconTheme: const IconThemeData(
+                      color: Colors.white,
+                    ),
                     bottomNavigationBarTheme:
                         const BottomNavigationBarThemeData(
                       enableFeedback: false,
@@ -67,7 +201,6 @@ class MyApp extends StatelessWidget {
                         0xff252c54,
                       ),
                     ),
-                    textTheme: TextTheme(),
                     fontFamily: "QuickSand",
                     colorScheme: const ColorScheme.dark(
                       primary: Color(

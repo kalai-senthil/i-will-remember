@@ -11,3 +11,8 @@
 - Worked on project structure
 - Done Navigation Bar with `Animations`
 - HomePage design started
+
+## Day - 02
+
+- Configured Firebase Auth
+- Created LoginPage for the user to login

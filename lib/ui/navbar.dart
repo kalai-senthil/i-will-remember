@@ -86,7 +86,7 @@ class NavbarItem extends HookWidget {
               width: selectedNavIndicator.value,
               height: 3,
               decoration: BoxDecoration(
-                color: Color(
+                color: const Color(
                   0xff6a52d8,
                 ),
                 borderRadius: Utils.borderRadiusRoundedFull,
@@ -104,10 +104,10 @@ class NavbarItem extends HookWidget {
                 currentColor: selected
                     ? isDark
                         ? Colors.white
-                        : Color(
+                        : const Color(
                             0xff6a52d8,
                           )
-                    : Color(0xff8d8fac),
+                    : const Color(0xff8d8fac),
               ),
             ),
           );
