@@ -16,3 +16,4 @@
 
 - Configured Firebase Auth
 - Created LoginPage for the user to login
+- Added Simple Validation
