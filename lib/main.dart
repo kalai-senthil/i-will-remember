@@ -69,9 +69,7 @@ class MyApp extends StatelessWidget {
                     iconButtonTheme: IconButtonThemeData(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                          Color(
-                            0xff6a52d8,
-                          ),
+                          Utils.lightPrimaryColor,
                         ),
                         textStyle: MaterialStateProperty.all(
                           GoogleFonts.quicksand(
@@ -84,9 +82,7 @@ class MyApp extends StatelessWidget {
                     textButtonTheme: TextButtonThemeData(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                            Color(
-                              0xff6a52d8,
-                            ),
+                            Utils.darkPrimaryColor,
                           ),
                           textStyle: MaterialStateProperty.all(
                             GoogleFonts.quicksand(
@@ -101,25 +97,19 @@ class MyApp extends StatelessWidget {
                       enableFeedback: false,
                       showSelectedLabels: false,
                       selectedIconTheme: IconThemeData(
-                        color: Color(
-                          0xff6a52d8,
-                        ),
+                        color: Utils.darkPrimaryColor,
                       ),
                       elevation: 10,
                       showUnselectedLabels: false,
-                      backgroundColor: Color(
-                        0xfff6f6fe,
-                      ),
+                      backgroundColor: Utils.lightPrimaryColor,
                     ),
                     fontFamily: "QuickSand",
                     colorScheme: const ColorScheme.light(
-                      primary: Color(
-                        0xfff6f6fe,
-                      ),
+                      primary: Utils.lightPrimaryColor,
                       background: Colors.white,
-                      onPrimaryContainer: Color(0xff8871e5),
+                      onPrimaryContainer: Utils.lightPrimaryContainerColor,
                       onSecondaryContainer: Utils.primaryColor,
-                      onSecondary: Color(0xff121943),
+                      onSecondary: Utils.lightSecondaryColor,
                     ),
                     useMaterial3: true,
                   )

@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:remainder/db/getters.dart';
 import 'package:remainder/stores/login_store.dart';
 import 'package:remainder/stores/nav_store.dart';
-
+import 'package:remainder/models/categories.dart';
 part 'app_store.g.dart';
 
 class AppStore = _AppStore with _$AppStore;
@@ -11,6 +13,8 @@ class AppStore = _AppStore with _$AppStore;
 enum ThemeEnum { light, dark, system }
 
 abstract class _AppStore with Store {
+  static final categoriesRef =
+      FirebaseFirestore.instance.collection('categories');
   _AppStore() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
@@ -20,15 +24,63 @@ abstract class _AppStore with Store {
       }
       isLoggedIn = true;
       this.user = user;
+      runAfterLogin();
     });
+  }
+  @action
+  void runAfterLogin() async {
+    try {
+      final categories = await getCategories(categoriesRef, userUID);
+      this.categories = ObservableList.of(categories);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @observable
   User? user;
+
+  String get userUID {
+    if (user != null) {
+      return user!.uid;
+    }
+    return "";
+  }
+
+  @observable
+  String addCategoryText = '';
+  @observable
+  bool addCategoryLoading = false;
+  @observable
+  List<TaskCategory> categories = [];
   @observable
   bool isLoggedIn = false;
   @observable
   ThemeEnum theme = ThemeEnum.light;
+
+  @action
+  void setAddCategoryText(String d) {
+    addCategoryText = d.trim();
+  }
+
+  @action
+  Future addCategoryToDB() async {
+    if (addCategoryText.isEmpty) {
+      return;
+    }
+    addCategoryLoading = true;
+    try {
+      Map<String, dynamic> data = {'userId': userUID, 'name': addCategoryText};
+      DocumentReference docRef = await categoriesRef.add(data);
+      categories.add(TaskCategory(id: docRef.id, name: addCategoryText));
+      categories = ObservableList.of(categories);
+    } catch (e) {
+      print(e);
+    } finally {
+      addCategoryText = '';
+      addCategoryLoading = false;
+    }
+  }
 
   @action
   void setTheme(ThemeEnum themeEnum) {

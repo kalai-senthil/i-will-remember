@@ -24,6 +24,54 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$addCategoryTextAtom =
+      Atom(name: '_AppStore.addCategoryText', context: context);
+
+  @override
+  String get addCategoryText {
+    _$addCategoryTextAtom.reportRead();
+    return super.addCategoryText;
+  }
+
+  @override
+  set addCategoryText(String value) {
+    _$addCategoryTextAtom.reportWrite(value, super.addCategoryText, () {
+      super.addCategoryText = value;
+    });
+  }
+
+  late final _$addCategoryLoadingAtom =
+      Atom(name: '_AppStore.addCategoryLoading', context: context);
+
+  @override
+  bool get addCategoryLoading {
+    _$addCategoryLoadingAtom.reportRead();
+    return super.addCategoryLoading;
+  }
+
+  @override
+  set addCategoryLoading(bool value) {
+    _$addCategoryLoadingAtom.reportWrite(value, super.addCategoryLoading, () {
+      super.addCategoryLoading = value;
+    });
+  }
+
+  late final _$categoriesAtom =
+      Atom(name: '_AppStore.categories', context: context);
+
+  @override
+  List<TaskCategory> get categories {
+    _$categoriesAtom.reportRead();
+    return super.categories;
+  }
+
+  @override
+  set categories(List<TaskCategory> value) {
+    _$categoriesAtom.reportWrite(value, super.categories, () {
+      super.categories = value;
+    });
+  }
+
   late final _$isLoggedInAtom =
       Atom(name: '_AppStore.isLoggedIn', context: context);
 
@@ -59,6 +107,17 @@ mixin _$AppStore on _AppStore, Store {
       ActionController(name: '_AppStore', context: context);
 
   @override
+  void setAddCategoryText(String d) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.setAddCategoryText');
+    try {
+      return super.setAddCategoryText(d);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setTheme(ThemeEnum themeEnum) {
     final _$actionInfo =
         _$_AppStoreActionController.startAction(name: '_AppStore.setTheme');
@@ -73,6 +132,9 @@ mixin _$AppStore on _AppStore, Store {
   String toString() {
     return '''
 user: ${user},
+addCategoryText: ${addCategoryText},
+addCategoryLoading: ${addCategoryLoading},
+categories: ${categories},
 isLoggedIn: ${isLoggedIn},
 theme: ${theme}
     ''';

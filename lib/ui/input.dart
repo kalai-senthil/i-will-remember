@@ -6,7 +6,7 @@ class InputWidget extends StatelessWidget {
     super.key,
     required this.hintText,
     required this.onChange,
-    required this.type,
+    this.type = TextInputType.text,
     this.textEditingController,
     this.disabled = false,
     this.obscureText = false,

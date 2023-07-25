@@ -17,3 +17,10 @@
 - Configured Firebase Auth
 - Created LoginPage for the user to login
 - Added Simple Validation
+
+## Day - 03
+
+- Colors Setup
+- Configured Firebase Firestore
+- Added functionality to add categories
+- List Added Categories
