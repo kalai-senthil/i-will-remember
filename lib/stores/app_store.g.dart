@@ -87,6 +87,22 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$selectedCategoryAtom =
+      Atom(name: '_AppStore.selectedCategory', context: context);
+
+  @override
+  String? get selectedCategory {
+    _$selectedCategoryAtom.reportRead();
+    return super.selectedCategory;
+  }
+
+  @override
+  set selectedCategory(String? value) {
+    _$selectedCategoryAtom.reportWrite(value, super.selectedCategory, () {
+      super.selectedCategory = value;
+    });
+  }
+
   late final _$addCategoryLoadingAtom =
       Atom(name: '_AppStore.addCategoryLoading', context: context);
 
@@ -198,6 +214,17 @@ mixin _$AppStore on _AppStore, Store {
   }
 
   @override
+  void setSelectedCategory(String? d) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.setSelectedCategory');
+    try {
+      return super.setSelectedCategory(d);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setTheme(ThemeEnum themeEnum) {
     final _$actionInfo =
         _$_AppStoreActionController.startAction(name: '_AppStore.setTheme');
@@ -216,6 +243,7 @@ tasksLoading: ${tasksLoading},
 addingTask: ${addingTask},
 user: ${user},
 addCategoryText: ${addCategoryText},
+selectedCategory: ${selectedCategory},
 addCategoryLoading: ${addCategoryLoading},
 categories: ${categories},
 isLoggedIn: ${isLoggedIn},

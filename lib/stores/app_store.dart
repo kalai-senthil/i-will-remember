@@ -75,6 +75,8 @@ abstract class _AppStore with Store {
   @observable
   String addCategoryText = '';
   @observable
+  String? selectedCategory;
+  @observable
   bool addCategoryLoading = false;
   @observable
   List<TaskCategory> categories = [];
@@ -86,6 +88,11 @@ abstract class _AppStore with Store {
   @action
   void setAddCategoryText(String d) {
     addCategoryText = d.trim();
+  }
+
+  @action
+  void setSelectedCategory(String? d) {
+    selectedCategory = d;
   }
 
   @action
