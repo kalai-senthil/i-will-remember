@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:remainder/db/getters.dart';
+import 'package:remainder/models/tasks.dart';
 import 'package:remainder/stores/login_store.dart';
 import 'package:remainder/stores/nav_store.dart';
 import 'package:remainder/models/categories.dart';
+import 'package:remainder/utils.dart';
 part 'app_store.g.dart';
 
 class AppStore = _AppStore with _$AppStore;
@@ -14,7 +15,9 @@ enum ThemeEnum { light, dark, system }
 
 abstract class _AppStore with Store {
   static final categoriesRef =
-      FirebaseFirestore.instance.collection('categories');
+      FirebaseFirestore.instance.collection(CollectionKeys.categories);
+  static final tasksRef =
+      FirebaseFirestore.instance.collection(CollectionKeys.todos);
   _AppStore() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
@@ -27,14 +30,36 @@ abstract class _AppStore with Store {
       runAfterLogin();
     });
   }
+  @observable
+  Map<String, List<Tasks>> tasks = {};
+  @observable
+  bool tasksLoading = false;
+  @observable
+  bool addingTask = false;
   @action
-  void runAfterLogin() async {
+  Future getTasksForCategory(String id) async {
+    bool alreadyDownloaded = tasks.containsKey(id);
+    if (alreadyDownloaded) return;
+    tasksLoading = true;
+    try {
+      final tasks = await getTasks(tasksRef, id);
+      this.tasks.putIfAbsent(id, () => tasks);
+      this.tasks = ObservableMap.of(this.tasks);
+    } catch (e) {
+      print(e);
+    } finally {
+      tasksLoading = false;
+    }
+  }
+
+  @action
+  Future runAfterLogin() async {
     try {
       final categories = await getCategories(categoriesRef, userUID);
       this.categories = ObservableList.of(categories);
     } catch (e) {
       print(e);
-    }
+    } finally {}
   }
 
   @observable
@@ -63,6 +88,8 @@ abstract class _AppStore with Store {
     addCategoryText = d.trim();
   }
 
+  @action
+  Future addTask() async {}
   @action
   Future addCategoryToDB() async {
     if (addCategoryText.isEmpty) {

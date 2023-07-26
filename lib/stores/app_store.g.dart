@@ -9,6 +9,53 @@ part of 'app_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppStore on _AppStore, Store {
+  late final _$tasksAtom = Atom(name: '_AppStore.tasks', context: context);
+
+  @override
+  Map<String, List<Tasks>> get tasks {
+    _$tasksAtom.reportRead();
+    return super.tasks;
+  }
+
+  @override
+  set tasks(Map<String, List<Tasks>> value) {
+    _$tasksAtom.reportWrite(value, super.tasks, () {
+      super.tasks = value;
+    });
+  }
+
+  late final _$tasksLoadingAtom =
+      Atom(name: '_AppStore.tasksLoading', context: context);
+
+  @override
+  bool get tasksLoading {
+    _$tasksLoadingAtom.reportRead();
+    return super.tasksLoading;
+  }
+
+  @override
+  set tasksLoading(bool value) {
+    _$tasksLoadingAtom.reportWrite(value, super.tasksLoading, () {
+      super.tasksLoading = value;
+    });
+  }
+
+  late final _$addingTaskAtom =
+      Atom(name: '_AppStore.addingTask', context: context);
+
+  @override
+  bool get addingTask {
+    _$addingTaskAtom.reportRead();
+    return super.addingTask;
+  }
+
+  @override
+  set addingTask(bool value) {
+    _$addingTaskAtom.reportWrite(value, super.addingTask, () {
+      super.addingTask = value;
+    });
+  }
+
   late final _$userAtom = Atom(name: '_AppStore.user', context: context);
 
   @override
@@ -103,6 +150,39 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$getTasksForCategoryAsyncAction =
+      AsyncAction('_AppStore.getTasksForCategory', context: context);
+
+  @override
+  Future<dynamic> getTasksForCategory(String id) {
+    return _$getTasksForCategoryAsyncAction
+        .run(() => super.getTasksForCategory(id));
+  }
+
+  late final _$runAfterLoginAsyncAction =
+      AsyncAction('_AppStore.runAfterLogin', context: context);
+
+  @override
+  Future<dynamic> runAfterLogin() {
+    return _$runAfterLoginAsyncAction.run(() => super.runAfterLogin());
+  }
+
+  late final _$addTaskAsyncAction =
+      AsyncAction('_AppStore.addTask', context: context);
+
+  @override
+  Future<dynamic> addTask() {
+    return _$addTaskAsyncAction.run(() => super.addTask());
+  }
+
+  late final _$addCategoryToDBAsyncAction =
+      AsyncAction('_AppStore.addCategoryToDB', context: context);
+
+  @override
+  Future<dynamic> addCategoryToDB() {
+    return _$addCategoryToDBAsyncAction.run(() => super.addCategoryToDB());
+  }
+
   late final _$_AppStoreActionController =
       ActionController(name: '_AppStore', context: context);
 
@@ -131,6 +211,9 @@ mixin _$AppStore on _AppStore, Store {
   @override
   String toString() {
     return '''
+tasks: ${tasks},
+tasksLoading: ${tasksLoading},
+addingTask: ${addingTask},
 user: ${user},
 addCategoryText: ${addCategoryText},
 addCategoryLoading: ${addCategoryLoading},

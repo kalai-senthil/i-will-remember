@@ -9,6 +9,7 @@ final class CollectionKeys {
   static const users = "users";
   static const remainders = "remainders";
   static const todos = "todos";
+  static const categories = "categories";
 }
 
 final class StringKeys {
@@ -47,4 +48,21 @@ final class Utils {
   static final borderRadiusRoundedFull = BorderRadius.circular(9999);
   static final borderRadiusRoundedCard = BorderRadius.circular(10);
   static const print = log;
+  static List<BoxShadow> cardBtnShadow = [
+    BoxShadow(
+      color: Colors.black.withOpacity(.04),
+      blurRadius: 10,
+      spreadRadius: 2,
+    ),
+  ];
+  static List<BoxShadow> cardShadow = [
+    BoxShadow(
+      color: Colors.black.withOpacity(.06),
+      blurRadius: 10,
+    ),
+    BoxShadow(
+      color: Colors.black.withOpacity(.04),
+      blurRadius: 10,
+    ),
+  ];
 }

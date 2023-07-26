@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:remainder/models/categories.dart';
+import 'package:remainder/models/tasks.dart';
 
 Future<List<TaskCategory>> getCategories(
     CollectionReference categoriesRef, String userId) async {
@@ -14,4 +15,19 @@ Future<List<TaskCategory>> getCategories(
     }
   }
   return categories;
+}
+
+Future<List<Tasks>> getTasks(
+    CollectionReference tasksRef, String categoryId) async {
+  List<Tasks> tasks = [];
+  final docs = await tasksRef.where("categoryId", isEqualTo: categoryId).get();
+  for (DocumentSnapshot doc in docs.docs) {
+    if (doc.exists) {
+      final data = doc.data();
+      if (data != null) {
+        tasks.add(Tasks.fromJSON({...(data as Map), "id": doc.id}));
+      }
+    }
+  }
+  return tasks;
 }

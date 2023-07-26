@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
-void showCustomBottomSheet({required BuildContext context, Widget? widget}) {
+void showCustomBottomSheet({
+  required BuildContext context,
+  Widget? widget,
+  bool loading = false,
+  Function()? onDone,
+}) {
   showModalBottomSheet(
+    isScrollControlled: true,
     context: context,
     builder: (context) {
       return widget ?? const SizedBox();

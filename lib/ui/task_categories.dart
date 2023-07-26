@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:remainder/helpers.dart';
 import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/ui/Render_Category.dart';
 import 'package:remainder/ui/create_categories.dart';
@@ -14,21 +15,26 @@ class TaskCategories extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SectionHeader(
+        SectionHeader(
           title: "Categories",
-          icon: Icon(
+          icon: const Icon(
             Icons.add_box_rounded,
             color: Utils.darkPrimaryColor,
           ),
+          onPressed: () {
+            createCategoryHelper(context: context);
+          },
         ),
         Observer(
           builder: (context) {
             final categories = context.read<AppStore>().categories;
             if (categories.isEmpty) {
-              return const CreateCategory();
+              return CreateData(
+                onTap: () => createCategoryHelper(context: context),
+              );
             }
-            return SizedBox(
-              height: 150,
+            return ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 170),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
