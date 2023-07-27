@@ -8,7 +8,7 @@ import 'dart:developer' show log;
 final class CollectionKeys {
   static const users = "users";
   static const remainders = "remainders";
-  static const todos = "todos";
+  static const tasks = "tasks";
   static const categories = "categories";
 }
 
@@ -39,6 +39,7 @@ final class Utils {
       screen: const Settings(),
     ),
   ];
+  static const days = ['Mon', 'Tue', "Wed", "Thu", "Fri", "Sat", "Sun"];
   static const lightPrimaryColor = Color(0xfff6f6fe);
   static const cardPadding = EdgeInsets.symmetric(vertical: 5, horizontal: 10);
   static const lightSecondaryColor = Color(0xff121943);

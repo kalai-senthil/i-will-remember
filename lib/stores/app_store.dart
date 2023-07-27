@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:remainder/db/getters.dart';
+import 'package:remainder/db/setters.dart';
 import 'package:remainder/models/tasks.dart';
 import 'package:remainder/stores/login_store.dart';
 import 'package:remainder/stores/nav_store.dart';
@@ -17,7 +20,7 @@ abstract class _AppStore with Store {
   static final categoriesRef =
       FirebaseFirestore.instance.collection(CollectionKeys.categories);
   static final tasksRef =
-      FirebaseFirestore.instance.collection(CollectionKeys.todos);
+      FirebaseFirestore.instance.collection(CollectionKeys.tasks);
   _AppStore() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
@@ -35,7 +38,64 @@ abstract class _AppStore with Store {
   @observable
   bool tasksLoading = false;
   @observable
+  List<String> addTasksDays = [];
+  @observable
   bool addingTask = false;
+  @action
+  Future setAddTaskDate(BuildContext context) async {
+    final date = await showDatePicker(
+      initialDate: addTaskDateAndTime,
+      context: context,
+      firstDate: addTaskDateAndTime,
+      lastDate: DateTime(
+        addTaskDateAndTime.year * 2,
+      ),
+    );
+    if (date != null) {
+      addTaskDateAndTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        addTaskDateAndTime.hour,
+        addTaskDateAndTime.minute,
+        date.second,
+        date.millisecond,
+        date.microsecond,
+      );
+    }
+  }
+
+  @action
+  Future setAddTaskTime(BuildContext context) async {
+    final date = await showTimePicker(
+      initialTime: TimeOfDay.fromDateTime(
+        addTaskDateAndTime,
+      ),
+      context: context,
+    );
+    if (date != null) {
+      addTaskDateAndTime = DateTime(
+        addTaskDateAndTime.year,
+        addTaskDateAndTime.month,
+        addTaskDateAndTime.day,
+        date.hour,
+        date.minute,
+        addTaskDateAndTime.second,
+      );
+    }
+  }
+
+  @action
+  void selectDayToAddTask(String d) {
+    final presentIndex = addTasksDays.indexOf(d);
+    if (presentIndex == -1) {
+      addTasksDays.add(d);
+    } else {
+      addTasksDays.removeAt(presentIndex);
+    }
+    addTasksDays = ObservableList.of(addTasksDays);
+  }
+
   @action
   Future getTasksForCategory(String id) async {
     bool alreadyDownloaded = tasks.containsKey(id);
@@ -73,7 +133,11 @@ abstract class _AppStore with Store {
   }
 
   @observable
+  DateTime addTaskDateAndTime = DateTime.now();
+  @observable
   String addCategoryText = '';
+  @observable
+  String? addTaskText;
   @observable
   String? selectedCategory;
   @observable
@@ -96,7 +160,55 @@ abstract class _AppStore with Store {
   }
 
   @action
-  Future addTask() async {}
+  void setAddTaskText(String? d) {
+    if (d == null) return;
+    addTaskText = d.trim();
+  }
+
+  @action
+  Future<bool> addTask() async {
+    try {
+      if (selectedCategory == null) {
+        return false;
+      }
+      addingTask = true;
+      final taskDoc = await addTaskToDB(tasksRef, {
+        "task": addTaskText,
+        "createdAt": FieldValue.serverTimestamp(),
+        "time": addTaskDateAndTime,
+        "days": addTasksDays,
+        "categoryId": selectedCategory,
+        "enabled": true,
+      });
+      final taskToAdd = Tasks.fromJSON({
+        ...{
+          "task": addTaskText,
+          "createdAt": DateTime.now(),
+          "time": addTaskDateAndTime,
+          "days": addTasksDays,
+          "categoryId": selectedCategory,
+          "id": taskDoc.id,
+          "enabled": true,
+        }
+      });
+      if (tasks.containsKey(selectedCategory)) {
+        tasks[selectedCategory]!.add(taskToAdd);
+      } else {
+        tasks[selectedCategory!] = [taskToAdd];
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    } finally {
+      addingTask = false;
+      addTaskText = null;
+      selectedCategory = null;
+      addTasksDays.clear();
+      addTaskDateAndTime = DateTime.now();
+    }
+  }
+
   @action
   Future addCategoryToDB() async {
     if (addCategoryText.isEmpty) {

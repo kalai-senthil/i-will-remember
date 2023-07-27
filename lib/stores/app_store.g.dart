@@ -40,6 +40,22 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$addTasksDaysAtom =
+      Atom(name: '_AppStore.addTasksDays', context: context);
+
+  @override
+  List<String> get addTasksDays {
+    _$addTasksDaysAtom.reportRead();
+    return super.addTasksDays;
+  }
+
+  @override
+  set addTasksDays(List<String> value) {
+    _$addTasksDaysAtom.reportWrite(value, super.addTasksDays, () {
+      super.addTasksDays = value;
+    });
+  }
+
   late final _$addingTaskAtom =
       Atom(name: '_AppStore.addingTask', context: context);
 
@@ -71,6 +87,22 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$addTaskDateAndTimeAtom =
+      Atom(name: '_AppStore.addTaskDateAndTime', context: context);
+
+  @override
+  DateTime get addTaskDateAndTime {
+    _$addTaskDateAndTimeAtom.reportRead();
+    return super.addTaskDateAndTime;
+  }
+
+  @override
+  set addTaskDateAndTime(DateTime value) {
+    _$addTaskDateAndTimeAtom.reportWrite(value, super.addTaskDateAndTime, () {
+      super.addTaskDateAndTime = value;
+    });
+  }
+
   late final _$addCategoryTextAtom =
       Atom(name: '_AppStore.addCategoryText', context: context);
 
@@ -84,6 +116,22 @@ mixin _$AppStore on _AppStore, Store {
   set addCategoryText(String value) {
     _$addCategoryTextAtom.reportWrite(value, super.addCategoryText, () {
       super.addCategoryText = value;
+    });
+  }
+
+  late final _$addTaskTextAtom =
+      Atom(name: '_AppStore.addTaskText', context: context);
+
+  @override
+  String? get addTaskText {
+    _$addTaskTextAtom.reportRead();
+    return super.addTaskText;
+  }
+
+  @override
+  set addTaskText(String? value) {
+    _$addTaskTextAtom.reportWrite(value, super.addTaskText, () {
+      super.addTaskText = value;
     });
   }
 
@@ -166,6 +214,22 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$setAddTaskDateAsyncAction =
+      AsyncAction('_AppStore.setAddTaskDate', context: context);
+
+  @override
+  Future<dynamic> setAddTaskDate(BuildContext context) {
+    return _$setAddTaskDateAsyncAction.run(() => super.setAddTaskDate(context));
+  }
+
+  late final _$setAddTaskTimeAsyncAction =
+      AsyncAction('_AppStore.setAddTaskTime', context: context);
+
+  @override
+  Future<dynamic> setAddTaskTime(BuildContext context) {
+    return _$setAddTaskTimeAsyncAction.run(() => super.setAddTaskTime(context));
+  }
+
   late final _$getTasksForCategoryAsyncAction =
       AsyncAction('_AppStore.getTasksForCategory', context: context);
 
@@ -187,7 +251,7 @@ mixin _$AppStore on _AppStore, Store {
       AsyncAction('_AppStore.addTask', context: context);
 
   @override
-  Future<dynamic> addTask() {
+  Future<bool> addTask() {
     return _$addTaskAsyncAction.run(() => super.addTask());
   }
 
@@ -201,6 +265,17 @@ mixin _$AppStore on _AppStore, Store {
 
   late final _$_AppStoreActionController =
       ActionController(name: '_AppStore', context: context);
+
+  @override
+  void selectDayToAddTask(String d) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.selectDayToAddTask');
+    try {
+      return super.selectDayToAddTask(d);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setAddCategoryText(String d) {
@@ -225,6 +300,17 @@ mixin _$AppStore on _AppStore, Store {
   }
 
   @override
+  void setAddTaskText(String? d) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.setAddTaskText');
+    try {
+      return super.setAddTaskText(d);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setTheme(ThemeEnum themeEnum) {
     final _$actionInfo =
         _$_AppStoreActionController.startAction(name: '_AppStore.setTheme');
@@ -240,9 +326,12 @@ mixin _$AppStore on _AppStore, Store {
     return '''
 tasks: ${tasks},
 tasksLoading: ${tasksLoading},
+addTasksDays: ${addTasksDays},
 addingTask: ${addingTask},
 user: ${user},
+addTaskDateAndTime: ${addTaskDateAndTime},
 addCategoryText: ${addCategoryText},
+addTaskText: ${addTaskText},
 selectedCategory: ${selectedCategory},
 addCategoryLoading: ${addCategoryLoading},
 categories: ${categories},

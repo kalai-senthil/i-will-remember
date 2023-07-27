@@ -23,9 +23,10 @@ Future<List<Tasks>> getTasks(
   final docs = await tasksRef.where("categoryId", isEqualTo: categoryId).get();
   for (DocumentSnapshot doc in docs.docs) {
     if (doc.exists) {
-      final data = doc.data();
-      if (data != null) {
-        tasks.add(Tasks.fromJSON({...(data as Map), "id": doc.id}));
+      final data = (doc.data() ?? {}) as Map;
+      data['createdAt'] = data['createdAt'].toDate();
+      if (data.isNotEmpty) {
+        tasks.add(Tasks.fromJSON({...data, "id": doc.id}));
       }
     }
   }

@@ -13,9 +13,9 @@ class InfoShowWithIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       decoration: BoxDecoration(
-        borderRadius: Utils.borderRadiusRoundedCard,
+        borderRadius: Utils.borderRadiusRoundedCard * 2,
         border: Border.all(
           color: Utils.lightPrimaryColor,
           width: 2,
@@ -27,7 +27,7 @@ class InfoShowWithIcon extends StatelessWidget {
           Flexible(
             child: icon,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 15),
           Container(
             width: 2,
             height: 25,
@@ -38,7 +38,7 @@ class InfoShowWithIcon extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Flexible(
-            flex: 10,
+            flex: 4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

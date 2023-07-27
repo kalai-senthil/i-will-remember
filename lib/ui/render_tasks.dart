@@ -4,34 +4,30 @@ import 'package:provider/provider.dart';
 import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/helpers.dart';
 import 'package:remainder/ui/create_categories.dart';
-import 'package:remainder/ui/section_header.dart';
+import 'package:remainder/ui/render_task.dart';
 
 class RenderTasks extends StatelessWidget {
   const RenderTasks({super.key, required this.id});
   final String id;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 10),
-        const SectionHeader(title: "Tasks"),
-        Observer(
-          builder: (context) {
-            final tasks = context.read<AppStore>().tasks[id] ?? [];
-            if (tasks.isEmpty) {
-              return CreateData(
-                onTap: () => createTaskHelper(context: context),
-              );
-            }
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return Text(tasks[index].task);
-              },
-              itemCount: tasks.length,
-            );
-          },
-        ),
-      ],
+    return Observer(
+      builder: (context) {
+        final tasks = context.read<AppStore>().tasks[id] ?? [];
+        if (tasks.isEmpty) {
+          return CreateData(
+            onTap: () => createTaskHelper(context: context),
+          );
+        }
+        return Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return RenderTask(task: tasks.elementAt(index), index: index);
+            },
+            itemCount: tasks.length,
+          ),
+        );
+      },
     );
   }
 }
