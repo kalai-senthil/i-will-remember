@@ -28,4 +28,4 @@
 
 ## Day - 04
 
-- Add Task to category
+- Add Task to category UI
