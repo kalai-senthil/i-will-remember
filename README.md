@@ -24,3 +24,8 @@
 - Configured Firebase Firestore
 - Added functionality to add categories
 - List Added Categories
+
+
+## Day - 04
+
+- Add Task to category
