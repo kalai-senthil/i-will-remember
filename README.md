@@ -33,3 +33,4 @@
 
 - Tasking Adding Completetion
 - Tasks View
+- Animating Task View
