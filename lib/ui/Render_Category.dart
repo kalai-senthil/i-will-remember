@@ -22,8 +22,7 @@ class RenderCategory extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: Utils.lightPrimaryColor,
-        boxShadow: Utils.cardShadow,
-        borderRadius: Utils.borderRadiusRoundedCard,
+        borderRadius: Utils.borderRadiusRoundedCard * 1.5,
       ),
       width: 125,
       child: Column(
@@ -43,7 +42,9 @@ class RenderCategory extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) {
-                  context.read<AppStore>().getTasksForCategory(category.id);
+                  context
+                      .read<AppStore>()
+                      .getRemaindersForCategory(category.id);
                   return ToDoScreen(
                     taskCategory: category,
                   );

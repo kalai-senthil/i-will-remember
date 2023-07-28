@@ -17,16 +17,16 @@ Future<List<TaskCategory>> getCategories(
   return categories;
 }
 
-Future<List<Tasks>> getTasks(
+Future<List<Remainder>> getTasks(
     CollectionReference tasksRef, String categoryId) async {
-  List<Tasks> tasks = [];
+  List<Remainder> tasks = [];
   final docs = await tasksRef.where("categoryId", isEqualTo: categoryId).get();
   for (DocumentSnapshot doc in docs.docs) {
     if (doc.exists) {
       final data = (doc.data() ?? {}) as Map;
       data['createdAt'] = data['createdAt'].toDate();
       if (data.isNotEmpty) {
-        tasks.add(Tasks.fromJSON({...data, "id": doc.id}));
+        tasks.add(Remainder.fromJSON({...data, "id": doc.id}));
       }
     }
   }

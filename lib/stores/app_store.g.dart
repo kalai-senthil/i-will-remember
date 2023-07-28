@@ -9,18 +9,35 @@ part of 'app_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppStore on _AppStore, Store {
-  late final _$tasksAtom = Atom(name: '_AppStore.tasks', context: context);
+  late final _$remaindersAtom =
+      Atom(name: '_AppStore.remainders', context: context);
 
   @override
-  Map<String, List<Tasks>> get tasks {
-    _$tasksAtom.reportRead();
-    return super.tasks;
+  Map<String, List<Remainder>> get remainders {
+    _$remaindersAtom.reportRead();
+    return super.remainders;
   }
 
   @override
-  set tasks(Map<String, List<Tasks>> value) {
-    _$tasksAtom.reportWrite(value, super.tasks, () {
-      super.tasks = value;
+  set remainders(Map<String, List<Remainder>> value) {
+    _$remaindersAtom.reportWrite(value, super.remainders, () {
+      super.remainders = value;
+    });
+  }
+
+  late final _$remaindersLoadingAtom =
+      Atom(name: '_AppStore.remaindersLoading', context: context);
+
+  @override
+  bool get remaindersLoading {
+    _$remaindersLoadingAtom.reportRead();
+    return super.remaindersLoading;
+  }
+
+  @override
+  set remaindersLoading(bool value) {
+    _$remaindersLoadingAtom.reportWrite(value, super.remaindersLoading, () {
+      super.remaindersLoading = value;
     });
   }
 
@@ -40,35 +57,35 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  late final _$addTasksDaysAtom =
-      Atom(name: '_AppStore.addTasksDays', context: context);
+  late final _$addRemainderDaysAtom =
+      Atom(name: '_AppStore.addRemainderDays', context: context);
 
   @override
-  List<String> get addTasksDays {
-    _$addTasksDaysAtom.reportRead();
-    return super.addTasksDays;
+  List<String> get addRemainderDays {
+    _$addRemainderDaysAtom.reportRead();
+    return super.addRemainderDays;
   }
 
   @override
-  set addTasksDays(List<String> value) {
-    _$addTasksDaysAtom.reportWrite(value, super.addTasksDays, () {
-      super.addTasksDays = value;
+  set addRemainderDays(List<String> value) {
+    _$addRemainderDaysAtom.reportWrite(value, super.addRemainderDays, () {
+      super.addRemainderDays = value;
     });
   }
 
-  late final _$addingTaskAtom =
-      Atom(name: '_AppStore.addingTask', context: context);
+  late final _$addingRemainderAtom =
+      Atom(name: '_AppStore.addingRemainder', context: context);
 
   @override
-  bool get addingTask {
-    _$addingTaskAtom.reportRead();
-    return super.addingTask;
+  bool get addingRemainder {
+    _$addingRemainderAtom.reportRead();
+    return super.addingRemainder;
   }
 
   @override
-  set addingTask(bool value) {
-    _$addingTaskAtom.reportWrite(value, super.addingTask, () {
-      super.addingTask = value;
+  set addingRemainder(bool value) {
+    _$addingRemainderAtom.reportWrite(value, super.addingRemainder, () {
+      super.addingRemainder = value;
     });
   }
 
@@ -87,19 +104,20 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  late final _$addTaskDateAndTimeAtom =
-      Atom(name: '_AppStore.addTaskDateAndTime', context: context);
+  late final _$addRemainderDateAndTimeAtom =
+      Atom(name: '_AppStore.addRemainderDateAndTime', context: context);
 
   @override
-  DateTime get addTaskDateAndTime {
-    _$addTaskDateAndTimeAtom.reportRead();
-    return super.addTaskDateAndTime;
+  DateTime get addRemainderDateAndTime {
+    _$addRemainderDateAndTimeAtom.reportRead();
+    return super.addRemainderDateAndTime;
   }
 
   @override
-  set addTaskDateAndTime(DateTime value) {
-    _$addTaskDateAndTimeAtom.reportWrite(value, super.addTaskDateAndTime, () {
-      super.addTaskDateAndTime = value;
+  set addRemainderDateAndTime(DateTime value) {
+    _$addRemainderDateAndTimeAtom
+        .reportWrite(value, super.addRemainderDateAndTime, () {
+      super.addRemainderDateAndTime = value;
     });
   }
 
@@ -214,29 +232,41 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  late final _$setAddTaskDateAsyncAction =
-      AsyncAction('_AppStore.setAddTaskDate', context: context);
+  late final _$toggleRemianderAsyncAction =
+      AsyncAction('_AppStore.toggleRemiander', context: context);
 
   @override
-  Future<dynamic> setAddTaskDate(BuildContext context) {
-    return _$setAddTaskDateAsyncAction.run(() => super.setAddTaskDate(context));
+  Future<bool> toggleRemiander(
+      String categoryId, String id, int index, bool state) {
+    return _$toggleRemianderAsyncAction
+        .run(() => super.toggleRemiander(categoryId, id, index, state));
   }
 
-  late final _$setAddTaskTimeAsyncAction =
-      AsyncAction('_AppStore.setAddTaskTime', context: context);
+  late final _$setAddRemainderDateAsyncAction =
+      AsyncAction('_AppStore.setAddRemainderDate', context: context);
 
   @override
-  Future<dynamic> setAddTaskTime(BuildContext context) {
-    return _$setAddTaskTimeAsyncAction.run(() => super.setAddTaskTime(context));
+  Future<dynamic> setAddRemainderDate(BuildContext context) {
+    return _$setAddRemainderDateAsyncAction
+        .run(() => super.setAddRemainderDate(context));
   }
 
-  late final _$getTasksForCategoryAsyncAction =
-      AsyncAction('_AppStore.getTasksForCategory', context: context);
+  late final _$setAddRemainderTimeAsyncAction =
+      AsyncAction('_AppStore.setAddRemainderTime', context: context);
 
   @override
-  Future<dynamic> getTasksForCategory(String id) {
-    return _$getTasksForCategoryAsyncAction
-        .run(() => super.getTasksForCategory(id));
+  Future<dynamic> setAddRemainderTime(BuildContext context) {
+    return _$setAddRemainderTimeAsyncAction
+        .run(() => super.setAddRemainderTime(context));
+  }
+
+  late final _$getRemaindersForCategoryAsyncAction =
+      AsyncAction('_AppStore.getRemaindersForCategory', context: context);
+
+  @override
+  Future<dynamic> getRemaindersForCategory(String id) {
+    return _$getRemaindersForCategoryAsyncAction
+        .run(() => super.getRemaindersForCategory(id));
   }
 
   late final _$runAfterLoginAsyncAction =
@@ -267,11 +297,11 @@ mixin _$AppStore on _AppStore, Store {
       ActionController(name: '_AppStore', context: context);
 
   @override
-  void selectDayToAddTask(String d) {
+  void selectDayToAddRemainder(String d) {
     final _$actionInfo = _$_AppStoreActionController.startAction(
-        name: '_AppStore.selectDayToAddTask');
+        name: '_AppStore.selectDayToAddRemainder');
     try {
-      return super.selectDayToAddTask(d);
+      return super.selectDayToAddRemainder(d);
     } finally {
       _$_AppStoreActionController.endAction(_$actionInfo);
     }
@@ -324,12 +354,13 @@ mixin _$AppStore on _AppStore, Store {
   @override
   String toString() {
     return '''
-tasks: ${tasks},
+remainders: ${remainders},
+remaindersLoading: ${remaindersLoading},
 tasksLoading: ${tasksLoading},
-addTasksDays: ${addTasksDays},
-addingTask: ${addingTask},
+addRemainderDays: ${addRemainderDays},
+addingRemainder: ${addingRemainder},
 user: ${user},
-addTaskDateAndTime: ${addTaskDateAndTime},
+addRemainderDateAndTime: ${addRemainderDateAndTime},
 addCategoryText: ${addCategoryText},
 addTaskText: ${addTaskText},
 selectedCategory: ${selectedCategory},

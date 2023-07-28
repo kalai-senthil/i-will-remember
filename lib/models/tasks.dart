@@ -1,11 +1,11 @@
-class Tasks {
+class Remainder {
   final String task;
   final String id;
   final String categoryId;
-  final bool enabled;
+  bool enabled;
   final List days;
   final DateTime createdAt;
-  Tasks({
+  Remainder({
     required this.createdAt,
     required this.days,
     required this.id,
@@ -14,8 +14,8 @@ class Tasks {
     required this.categoryId,
   });
 
-  factory Tasks.fromJSON(Map data) {
-    return Tasks(
+  factory Remainder.fromJSON(Map data) {
+    return Remainder(
       createdAt: data['createdAt'],
       id: data['id'],
       enabled: data['enabled'] ?? false,
@@ -24,13 +24,13 @@ class Tasks {
       categoryId: data['categoryId'],
     );
   }
-  static Map toJSON(Tasks task) {
+  static Map toJSON(Remainder remainder) {
     return {
-      "createdAt": task.createdAt,
-      "id": task.id,
-      "status": task.enabled,
-      "task": task.task,
-      "categoryId": task.categoryId,
+      "createdAt": remainder.createdAt,
+      "id": remainder.id,
+      "status": remainder.enabled,
+      "task": remainder.task,
+      "categoryId": remainder.categoryId,
     };
   }
 }

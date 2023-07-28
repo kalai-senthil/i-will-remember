@@ -38,10 +38,10 @@ void createCategoryHelper({required BuildContext context}) {
   );
 }
 
-void createTaskHelper({required BuildContext context}) {
+void createRemainderHelper({required BuildContext context}) {
   showCustomBottomSheet(
     context: context,
-    loading: context.read<AppStore>().addingTask,
+    loading: context.read<AppStore>().addingRemainder,
     onDone: () {
       Navigator.of(context).pop();
     },
@@ -49,7 +49,7 @@ void createTaskHelper({required BuildContext context}) {
       body: SafeArea(
         minimum: const EdgeInsets.only(top: 20),
         child: Observer(builder: (context) {
-          final addingTask = context.read<AppStore>().addingTask;
+          final addingTask = context.read<AppStore>().addingRemainder;
           return NewWidget(addingTask: addingTask);
         }),
       ),
@@ -170,10 +170,12 @@ class NewWidget extends StatelessWidget {
                         info: "Date",
                         child: Observer(builder: (context) {
                           final addTaskDateAndTime =
-                              context.read<AppStore>().addTaskDateAndTime;
+                              context.read<AppStore>().addRemainderDateAndTime;
                           return InkWell(
                             onTap: () {
-                              context.read<AppStore>().setAddTaskDate(context);
+                              context
+                                  .read<AppStore>()
+                                  .setAddRemainderDate(context);
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -209,10 +211,12 @@ class NewWidget extends StatelessWidget {
                         info: "Time",
                         child: Observer(builder: (context) {
                           final addTaskTime =
-                              context.read<AppStore>().addTaskDateAndTime;
+                              context.read<AppStore>().addRemainderDateAndTime;
                           return InkWell(
                             onTap: () {
-                              context.read<AppStore>().setAddTaskTime(context);
+                              context
+                                  .read<AppStore>()
+                                  .setAddRemainderTime(context);
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,7 +258,8 @@ class NewWidget extends StatelessWidget {
                 Row(
                   children: [
                     Observer(builder: (context) {
-                      final addingTask = context.read<AppStore>().addingTask;
+                      final addingTask =
+                          context.read<AppStore>().addingRemainder;
                       return Expanded(
                         child: TextButton.icon(
                           onPressed: () async {

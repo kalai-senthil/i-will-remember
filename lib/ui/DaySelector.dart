@@ -18,10 +18,10 @@ class DaySelector extends StatelessWidget {
           final day = Utils.days[index];
           return Observer(builder: (context) {
             final selected =
-                context.read<AppStore>().addTasksDays.contains(day);
+                context.read<AppStore>().addRemainderDays.contains(day);
             return InkWell(
               onTap: () {
-                context.read<AppStore>().selectDayToAddTask(day);
+                context.read<AppStore>().selectDayToAddRemainder(day);
               },
               child: Container(
                 decoration: BoxDecoration(

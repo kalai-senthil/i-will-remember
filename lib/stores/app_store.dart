@@ -19,7 +19,7 @@ enum ThemeEnum { light, dark, system }
 abstract class _AppStore with Store {
   static final categoriesRef =
       FirebaseFirestore.instance.collection(CollectionKeys.categories);
-  static final tasksRef =
+  static final remaindersRef =
       FirebaseFirestore.instance.collection(CollectionKeys.tasks);
   _AppStore() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -34,30 +34,46 @@ abstract class _AppStore with Store {
     });
   }
   @observable
-  Map<String, List<Tasks>> tasks = {};
+  Map<String, List<Remainder>> remainders = {};
+  @observable
+  bool remaindersLoading = false;
   @observable
   bool tasksLoading = false;
   @observable
-  List<String> addTasksDays = [];
+  List<String> addRemainderDays = [];
   @observable
-  bool addingTask = false;
+  bool addingRemainder = false;
   @action
-  Future setAddTaskDate(BuildContext context) async {
+  Future<bool> toggleRemiander(
+      String categoryId, String id, int index, bool state) async {
+    try {
+      await updateDoc(remaindersRef.doc(id), {"enabled": state});
+      remainders[categoryId]![index].enabled = state;
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      remainders = ObservableMap.of(remainders);
+    }
+  }
+
+  @action
+  Future setAddRemainderDate(BuildContext context) async {
     final date = await showDatePicker(
-      initialDate: addTaskDateAndTime,
+      initialDate: addRemainderDateAndTime,
       context: context,
-      firstDate: addTaskDateAndTime,
+      firstDate: addRemainderDateAndTime,
       lastDate: DateTime(
-        addTaskDateAndTime.year * 2,
+        addRemainderDateAndTime.year * 2,
       ),
     );
     if (date != null) {
-      addTaskDateAndTime = DateTime(
+      addRemainderDateAndTime = DateTime(
         date.year,
         date.month,
         date.day,
-        addTaskDateAndTime.hour,
-        addTaskDateAndTime.minute,
+        addRemainderDateAndTime.hour,
+        addRemainderDateAndTime.minute,
         date.second,
         date.millisecond,
         date.microsecond,
@@ -66,49 +82,49 @@ abstract class _AppStore with Store {
   }
 
   @action
-  Future setAddTaskTime(BuildContext context) async {
+  Future setAddRemainderTime(BuildContext context) async {
     final date = await showTimePicker(
       initialTime: TimeOfDay.fromDateTime(
-        addTaskDateAndTime,
+        addRemainderDateAndTime,
       ),
       context: context,
     );
     if (date != null) {
-      addTaskDateAndTime = DateTime(
-        addTaskDateAndTime.year,
-        addTaskDateAndTime.month,
-        addTaskDateAndTime.day,
+      addRemainderDateAndTime = DateTime(
+        addRemainderDateAndTime.year,
+        addRemainderDateAndTime.month,
+        addRemainderDateAndTime.day,
         date.hour,
         date.minute,
-        addTaskDateAndTime.second,
+        addRemainderDateAndTime.second,
       );
     }
   }
 
   @action
-  void selectDayToAddTask(String d) {
-    final presentIndex = addTasksDays.indexOf(d);
+  void selectDayToAddRemainder(String d) {
+    final presentIndex = addRemainderDays.indexOf(d);
     if (presentIndex == -1) {
-      addTasksDays.add(d);
+      addRemainderDays.add(d);
     } else {
-      addTasksDays.removeAt(presentIndex);
+      addRemainderDays.removeAt(presentIndex);
     }
-    addTasksDays = ObservableList.of(addTasksDays);
+    addRemainderDays = ObservableList.of(addRemainderDays);
   }
 
   @action
-  Future getTasksForCategory(String id) async {
-    bool alreadyDownloaded = tasks.containsKey(id);
+  Future getRemaindersForCategory(String id) async {
+    bool alreadyDownloaded = remainders.containsKey(id);
     if (alreadyDownloaded) return;
-    tasksLoading = true;
+    remaindersLoading = true;
     try {
-      final tasks = await getTasks(tasksRef, id);
-      this.tasks.putIfAbsent(id, () => tasks);
-      this.tasks = ObservableMap.of(this.tasks);
+      final tasks = await getTasks(remaindersRef, id);
+      this.remainders.putIfAbsent(id, () => tasks);
+      this.remainders = ObservableMap.of(this.remainders);
     } catch (e) {
       print(e);
     } finally {
-      tasksLoading = false;
+      remaindersLoading = false;
     }
   }
 
@@ -133,7 +149,7 @@ abstract class _AppStore with Store {
   }
 
   @observable
-  DateTime addTaskDateAndTime = DateTime.now();
+  DateTime addRemainderDateAndTime = DateTime.now();
   @observable
   String addCategoryText = '';
   @observable
@@ -171,41 +187,41 @@ abstract class _AppStore with Store {
       if (selectedCategory == null) {
         return false;
       }
-      addingTask = true;
-      final taskDoc = await addTaskToDB(tasksRef, {
+      addingRemainder = true;
+      final taskDoc = await addRemainderToDB(remaindersRef, {
         "task": addTaskText,
         "createdAt": FieldValue.serverTimestamp(),
-        "time": addTaskDateAndTime,
-        "days": addTasksDays,
+        "time": addRemainderDateAndTime,
+        "days": addRemainderDays,
         "categoryId": selectedCategory,
         "enabled": true,
       });
-      final taskToAdd = Tasks.fromJSON({
+      final taskToAdd = Remainder.fromJSON({
         ...{
           "task": addTaskText,
           "createdAt": DateTime.now(),
-          "time": addTaskDateAndTime,
-          "days": addTasksDays,
+          "time": addRemainderDateAndTime,
+          "days": addRemainderDays,
           "categoryId": selectedCategory,
           "id": taskDoc.id,
           "enabled": true,
         }
       });
-      if (tasks.containsKey(selectedCategory)) {
-        tasks[selectedCategory]!.add(taskToAdd);
+      if (remainders.containsKey(selectedCategory)) {
+        remainders[selectedCategory]!.add(taskToAdd);
       } else {
-        tasks[selectedCategory!] = [taskToAdd];
+        remainders[selectedCategory!] = [taskToAdd];
       }
       return true;
     } catch (e) {
       print(e);
       return false;
     } finally {
-      addingTask = false;
+      addingRemainder = false;
       addTaskText = null;
       selectedCategory = null;
-      addTasksDays.clear();
-      addTaskDateAndTime = DateTime.now();
+      addRemainderDays.clear();
+      addRemainderDateAndTime = DateTime.now();
     }
   }
 

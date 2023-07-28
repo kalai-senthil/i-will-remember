@@ -35,6 +35,34 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: theme == ThemeEnum.light
                 ? ThemeData(
+                    switchTheme: SwitchThemeData(
+                      trackColor: MaterialStateProperty.resolveWith(
+                        (states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Utils.primaryColor;
+                          }
+                        },
+                      ),
+                      thumbColor: MaterialStateProperty.resolveWith(
+                        (states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Utils.lightPrimaryColor;
+                          }
+                        },
+                      ),
+                    ),
+                    tabBarTheme: TabBarTheme(
+                      labelStyle: GoogleFonts.quicksand(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      labelColor: Utils.darkPrimaryColor,
+                      unselectedLabelStyle: GoogleFonts.quicksand(
+                        fontWeight: FontWeight.w600,
+                        color: Utils.lightSecondaryColor,
+                      ),
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicatorColor: Utils.lightSecondaryColor,
+                    ),
                     inputDecorationTheme: InputDecorationTheme(
                       disabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(

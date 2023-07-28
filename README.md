@@ -27,10 +27,15 @@
 
 ## Day - 04
 
-- Add Task to category UI
+- Added Category UI
 
 ## Day - 05
 
-- Tasking Adding Completetion
-- Tasks View
-- Animating Task View
+- Remainders Adding Completetion
+- Remainder View
+- Animating Remainders View
+
+## Day - 06
+
+- Tabs `Remainders/Tasks`
+- Remainders Togglers

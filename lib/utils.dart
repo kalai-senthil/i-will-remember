@@ -27,15 +27,9 @@ final class Utils {
       screen: const Home(),
     ),
     NavItem(
-      name: "Tasks",
-      icon: StringKeys.tasksIcon,
-      index: 1,
-      screen: const Tasks(),
-    ),
-    NavItem(
       name: "Settings",
       icon: StringKeys.settingsIcon,
-      index: 2,
+      index: 1,
       screen: const Settings(),
     ),
   ];
@@ -46,6 +40,7 @@ final class Utils {
   static const lightPrimaryContainerColor = Color(0xff8871e5);
   static const darkPrimaryColor = Color(0xff6a52d8);
   static const primaryColor = Color(0xffb1a1ea);
+  static const pagePadding = EdgeInsets.symmetric(horizontal: 6);
   static final borderRadiusRoundedFull = BorderRadius.circular(9999);
   static final borderRadiusRoundedCard = BorderRadius.circular(10);
   static const print = log;
