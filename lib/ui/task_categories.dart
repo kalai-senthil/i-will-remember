@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:remainder/helpers.dart';
 import 'package:remainder/stores/app_store.dart';
-import 'package:remainder/ui/Render_Category.dart';
+import 'package:remainder/ui/render_category.dart';
 import 'package:remainder/ui/create_categories.dart';
 import 'package:remainder/ui/section_header.dart';
 import 'package:remainder/utils.dart';
@@ -38,7 +38,9 @@ class TaskCategories extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return RenderCategory(category: categories.elementAt(index));
+                  return RenderCategory(
+                    category: categories.elementAt(index),
+                  );
                 },
                 itemCount: categories.length,
               ),

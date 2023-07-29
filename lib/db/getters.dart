@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:remainder/models/categories.dart';
-import 'package:remainder/models/tasks.dart';
+import 'package:remainder/models/remainder.dart';
+import 'package:remainder/models/todo.dart';
 
 Future<List<TaskCategory>> getCategories(
     CollectionReference categoriesRef, String userId) async {
@@ -17,10 +18,14 @@ Future<List<TaskCategory>> getCategories(
   return categories;
 }
 
-Future<List<Remainder>> getTasks(
+Future<List<Remainder>> getRemainders(
     CollectionReference tasksRef, String categoryId) async {
   List<Remainder> tasks = [];
-  final docs = await tasksRef.where("categoryId", isEqualTo: categoryId).get();
+  final docs = await tasksRef
+      .where("categoryId", isEqualTo: categoryId)
+      .orderBy("enabled")
+      .orderBy("createdAt", descending: true)
+      .get();
   for (DocumentSnapshot doc in docs.docs) {
     if (doc.exists) {
       final data = (doc.data() ?? {}) as Map;
@@ -31,4 +36,24 @@ Future<List<Remainder>> getTasks(
     }
   }
   return tasks;
+}
+
+Future<List<Todo>> getTodos(
+    CollectionReference todosRef, String categoryId) async {
+  List<Todo> todos = [];
+  final docs = await todosRef
+      .where("categoryId", isEqualTo: categoryId)
+      .orderBy("completed")
+      .orderBy("createdAt", descending: true)
+      .get();
+  for (DocumentSnapshot doc in docs.docs) {
+    if (doc.exists) {
+      final data = (doc.data() ?? {}) as Map;
+      data['createdAt'] = data['createdAt'].toDate();
+      if (data.isNotEmpty) {
+        todos.add(Todo.fromJSON({...data, "id": doc.id}));
+      }
+    }
+  }
+  return todos;
 }

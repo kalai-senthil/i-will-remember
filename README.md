@@ -39,3 +39,11 @@
 
 - Tabs `Remainders/Tasks`
 - Remainders Togglers
+
+## Day - 07
+
+- Tabs View Modification
+- Adding Todos Section
+- Editing todos
+- Refreshing capabilities
+- Bug Fixes

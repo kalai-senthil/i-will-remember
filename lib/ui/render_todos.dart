@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/helpers.dart';
+import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/ui/create_categories.dart';
-import 'package:remainder/ui/render_remainder.dart';
+import 'package:remainder/ui/render_todo.dart';
 
-class RenderRemainders extends StatelessWidget {
-  const RenderRemainders({super.key, required this.id});
+class RenderTodos extends StatelessWidget {
+  const RenderTodos({super.key, required this.id});
   final String id;
   @override
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        final tasks = context.watch<AppStore>().remainders[id] ?? [];
+        final tasks = context.watch<AppStore>().todos[id] ?? [];
         if (tasks.isEmpty) {
           return CreateData(
-            onTap: () => createRemainderHelper(context: context),
+            onTap: () => createTodoHelper(context: context, catId: id),
           );
         }
         return ListView.builder(
           itemBuilder: (context, index) {
-            return RenderRemainder(index: index, categoryId: id);
+            return RenderTodo(index: index, categoryId: id);
           },
           itemCount: tasks.length,
         );

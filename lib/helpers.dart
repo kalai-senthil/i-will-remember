@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:remainder/bottomsheet.dart';
-import 'package:remainder/ui/DaySelector.dart';
-import 'package:remainder/ui/InfoShowWithIcon.dart';
+import 'package:remainder/models/todo.dart';
+import 'package:remainder/ui/day_selector.dart';
+import 'package:remainder/ui/info_show_with_icon.dart';
 import 'package:remainder/stores/app_store.dart';
 import 'package:provider/provider.dart';
 import 'package:remainder/ui/input.dart';
@@ -30,6 +31,58 @@ void createCategoryHelper({required BuildContext context}) {
               disabled: addCategoryLoading,
               hintText: "Type...",
               onChange: context.read<AppStore>().setAddCategoryText,
+            ),
+          ],
+        ),
+      );
+    }),
+  );
+}
+
+void createTodoEditHelper({required BuildContext context, required Todo todo}) {
+  showCustomAlertDialog(
+    context: context,
+    loading: context.read<AppStore>().addCategoryLoading,
+    onDone: () {
+      context.read<AppStore>().editTaskToDB(todo);
+      Navigator.of(context).pop();
+    },
+    widget: Observer(builder: (context) {
+      final addingTodoLoading = context.read<AppStore>().addingTodoLoading;
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            const SectionHeader(title: "Edit Todo"),
+            InputWidget(
+              disabled: addingTodoLoading,
+              hintText: todo.todo,
+              onChange: context.read<AppStore>().setAddTodoText,
+            ),
+          ],
+        ),
+      );
+    }),
+  );
+}
+
+void createTodoHelper({required BuildContext context, required String catId}) {
+  showCustomAlertDialog(
+    context: context,
+    loading: context.read<AppStore>().addCategoryLoading,
+    onDone: () {
+      context.read<AppStore>().addTaskToDB(catId);
+      Navigator.of(context).pop();
+    },
+    widget: Observer(builder: (context) {
+      final addingTaskLoading = context.read<AppStore>().addingTodoLoading;
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            const SectionHeader(title: "Add Todo"),
+            InputWidget(
+              disabled: addingTaskLoading,
+              hintText: "Type...",
+              onChange: context.read<AppStore>().setAddTodoText,
             ),
           ],
         ),

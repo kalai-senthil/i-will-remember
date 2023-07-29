@@ -9,6 +9,13 @@ part of 'app_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppStore on _AppStore, Store {
+  Computed<String>? _$userUIDComputed;
+
+  @override
+  String get userUID => (_$userUIDComputed ??=
+          Computed<String>(() => super.userUID, name: '_AppStore.userUID'))
+      .value;
+
   late final _$remaindersAtom =
       Atom(name: '_AppStore.remainders', context: context);
 
@@ -22,6 +29,21 @@ mixin _$AppStore on _AppStore, Store {
   set remainders(Map<String, List<Remainder>> value) {
     _$remaindersAtom.reportWrite(value, super.remainders, () {
       super.remainders = value;
+    });
+  }
+
+  late final _$todosAtom = Atom(name: '_AppStore.todos', context: context);
+
+  @override
+  Map<String, List<Todo>> get todos {
+    _$todosAtom.reportRead();
+    return super.todos;
+  }
+
+  @override
+  set todos(Map<String, List<Todo>> value) {
+    _$todosAtom.reportWrite(value, super.todos, () {
+      super.todos = value;
     });
   }
 
@@ -41,19 +63,35 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  late final _$tasksLoadingAtom =
-      Atom(name: '_AppStore.tasksLoading', context: context);
+  late final _$todosLoadingAtom =
+      Atom(name: '_AppStore.todosLoading', context: context);
 
   @override
-  bool get tasksLoading {
-    _$tasksLoadingAtom.reportRead();
-    return super.tasksLoading;
+  bool get todosLoading {
+    _$todosLoadingAtom.reportRead();
+    return super.todosLoading;
   }
 
   @override
-  set tasksLoading(bool value) {
-    _$tasksLoadingAtom.reportWrite(value, super.tasksLoading, () {
-      super.tasksLoading = value;
+  set todosLoading(bool value) {
+    _$todosLoadingAtom.reportWrite(value, super.todosLoading, () {
+      super.todosLoading = value;
+    });
+  }
+
+  late final _$addingTodoLoadingAtom =
+      Atom(name: '_AppStore.addingTodoLoading', context: context);
+
+  @override
+  bool get addingTodoLoading {
+    _$addingTodoLoadingAtom.reportRead();
+    return super.addingTodoLoading;
+  }
+
+  @override
+  set addingTodoLoading(bool value) {
+    _$addingTodoLoadingAtom.reportWrite(value, super.addingTodoLoading, () {
+      super.addingTodoLoading = value;
     });
   }
 
@@ -134,6 +172,22 @@ mixin _$AppStore on _AppStore, Store {
   set addCategoryText(String value) {
     _$addCategoryTextAtom.reportWrite(value, super.addCategoryText, () {
       super.addCategoryText = value;
+    });
+  }
+
+  late final _$addTodoTextAtom =
+      Atom(name: '_AppStore.addTodoText', context: context);
+
+  @override
+  String get addTodoText {
+    _$addTodoTextAtom.reportRead();
+    return super.addTodoText;
+  }
+
+  @override
+  set addTodoText(String value) {
+    _$addTodoTextAtom.reportWrite(value, super.addTodoText, () {
+      super.addTodoText = value;
     });
   }
 
@@ -264,9 +318,18 @@ mixin _$AppStore on _AppStore, Store {
       AsyncAction('_AppStore.getRemaindersForCategory', context: context);
 
   @override
-  Future<dynamic> getRemaindersForCategory(String id) {
+  Future<dynamic> getRemaindersForCategory(String id, {bool refresh = false}) {
     return _$getRemaindersForCategoryAsyncAction
-        .run(() => super.getRemaindersForCategory(id));
+        .run(() => super.getRemaindersForCategory(id, refresh: refresh));
+  }
+
+  late final _$getTodosForCategoryAsyncAction =
+      AsyncAction('_AppStore.getTodosForCategory', context: context);
+
+  @override
+  Future<dynamic> getTodosForCategory(String id, {bool refresh = false}) {
+    return _$getTodosForCategoryAsyncAction
+        .run(() => super.getTodosForCategory(id, refresh: refresh));
   }
 
   late final _$runAfterLoginAsyncAction =
@@ -293,6 +356,22 @@ mixin _$AppStore on _AppStore, Store {
     return _$addCategoryToDBAsyncAction.run(() => super.addCategoryToDB());
   }
 
+  late final _$addTaskToDBAsyncAction =
+      AsyncAction('_AppStore.addTaskToDB', context: context);
+
+  @override
+  Future<dynamic> addTaskToDB(String catId) {
+    return _$addTaskToDBAsyncAction.run(() => super.addTaskToDB(catId));
+  }
+
+  late final _$editTaskToDBAsyncAction =
+      AsyncAction('_AppStore.editTaskToDB', context: context);
+
+  @override
+  Future<dynamic> editTaskToDB(Todo todo) {
+    return _$editTaskToDBAsyncAction.run(() => super.editTaskToDB(todo));
+  }
+
   late final _$_AppStoreActionController =
       ActionController(name: '_AppStore', context: context);
 
@@ -308,11 +387,33 @@ mixin _$AppStore on _AppStore, Store {
   }
 
   @override
+  void reloadCategory(String id) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.reloadCategory');
+    try {
+      return super.reloadCategory(id);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setAddCategoryText(String d) {
     final _$actionInfo = _$_AppStoreActionController.startAction(
         name: '_AppStore.setAddCategoryText');
     try {
       return super.setAddCategoryText(d);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setAddTodoText(String d) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.setAddTodoText');
+    try {
+      return super.setAddTodoText(d);
     } finally {
       _$_AppStoreActionController.endAction(_$actionInfo);
     }
@@ -355,19 +456,23 @@ mixin _$AppStore on _AppStore, Store {
   String toString() {
     return '''
 remainders: ${remainders},
+todos: ${todos},
 remaindersLoading: ${remaindersLoading},
-tasksLoading: ${tasksLoading},
+todosLoading: ${todosLoading},
+addingTodoLoading: ${addingTodoLoading},
 addRemainderDays: ${addRemainderDays},
 addingRemainder: ${addingRemainder},
 user: ${user},
 addRemainderDateAndTime: ${addRemainderDateAndTime},
 addCategoryText: ${addCategoryText},
+addTodoText: ${addTodoText},
 addTaskText: ${addTaskText},
 selectedCategory: ${selectedCategory},
 addCategoryLoading: ${addCategoryLoading},
 categories: ${categories},
 isLoggedIn: ${isLoggedIn},
-theme: ${theme}
+theme: ${theme},
+userUID: ${userUID}
     ''';
   }
 }

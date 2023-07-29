@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:remainder/models/categories.dart';
@@ -45,6 +44,7 @@ class RenderCategory extends StatelessWidget {
                   context
                       .read<AppStore>()
                       .getRemaindersForCategory(category.id);
+                  context.read<AppStore>().getTodosForCategory(category.id);
                   return ToDoScreen(
                     taskCategory: category,
                   );

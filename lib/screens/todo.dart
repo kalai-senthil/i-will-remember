@@ -6,10 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:remainder/helpers.dart';
 import 'package:remainder/models/categories.dart';
 import 'package:remainder/stores/app_store.dart';
-import 'package:remainder/ui/home_header.dart';
-import 'package:remainder/ui/section_header.dart';
-import 'package:remainder/ui/page_header.dart';
+import 'package:remainder/ui/render_todos.dart';
 import 'package:remainder/ui/render_remainders.dart';
+import 'package:remainder/ui/section_header.dart';
 import 'package:remainder/utils.dart';
 
 class ToDoScreen extends HookWidget {
@@ -23,6 +22,7 @@ class ToDoScreen extends HookWidget {
         onPressed: () {
           switch (tabController.index) {
             case 0:
+              createTodoHelper(context: context, catId: taskCategory.id);
               break;
             case 1:
               createRemainderHelper(context: context);
@@ -40,18 +40,45 @@ class ToDoScreen extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PageHeader(
+              SectionHeader(
+                icon: const Icon(Icons.refresh_rounded),
                 title: taskCategory.name,
+                onPressed: () =>
+                    context.read<AppStore>().reloadCategory(taskCategory.id),
               ),
               const SizedBox(height: 10),
               TabBar(
                 controller: tabController,
                 tabs: [
-                  SvgPicture.asset(
-                    "assets/tasks.svg",
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/tasks.svg",
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          "Todos",
+                        ),
+                      )
+                    ],
                   ),
-                  SvgPicture.asset(
-                    "assets/tasks.svg",
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/tasks.svg",
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          "Remainders",
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
@@ -61,14 +88,14 @@ class ToDoScreen extends HookWidget {
                   children: [
                     Observer(
                       builder: (context) {
-                        final remaindersLoading =
-                            context.read<AppStore>().remaindersLoading;
-                        if (remaindersLoading) {
+                        final todosLoading =
+                            context.read<AppStore>().todosLoading;
+                        if (todosLoading) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
                         }
-                        return RenderRemainder(
+                        return RenderTodos(
                           id: taskCategory.id,
                         );
                       },
@@ -82,7 +109,7 @@ class ToDoScreen extends HookWidget {
                             child: CircularProgressIndicator(),
                           );
                         }
-                        return RenderRemainder(
+                        return RenderRemainders(
                           id: taskCategory.id,
                         );
                       },

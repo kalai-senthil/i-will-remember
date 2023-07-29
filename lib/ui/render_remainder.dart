@@ -6,8 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:remainder/stores/app_store.dart';
 
-class RenderTask extends HookWidget {
-  const RenderTask({super.key, required this.index, required this.categoryId});
+class RenderRemainder extends HookWidget {
+  const RenderRemainder(
+      {super.key, required this.index, required this.categoryId});
   final int index;
   final String categoryId;
   @override

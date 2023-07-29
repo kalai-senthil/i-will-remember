@@ -38,7 +38,7 @@ abstract class _LoginStore with Store {
     isLoggingIn = true;
     error = null;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: userEmail, password: password);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {

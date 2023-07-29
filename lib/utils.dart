@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:remainder/screens/home.dart';
 import 'package:remainder/screens/settings.dart';
-import 'package:remainder/screens/tasks.dart';
 import 'package:remainder/types.dart';
 import 'dart:developer' show log;
 
 final class CollectionKeys {
   static const users = "users";
   static const remainders = "remainders";
-  static const tasks = "tasks";
+  static const todos = "todos";
   static const categories = "categories";
 }
 
