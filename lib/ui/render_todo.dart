@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:remainder/helpers.dart';
 import 'package:remainder/stores/app_store.dart';
+import 'package:remainder/ui/icon_scale_transition.dart';
 import 'package:remainder/utils.dart';
 
 class RenderTodo extends HookWidget {
@@ -28,11 +29,14 @@ class RenderTodo extends HookWidget {
           final todo =
               (context.read<AppStore>().todos[categoryId] ?? [])[index];
           return ListTile(
-            leading: todo.completed
-                ? const Icon(
-                    Icons.check_circle_outlined,
-                  )
-                : const Icon(Icons.close_rounded),
+            leading: CustomIconTransition(
+              icon1: const Icon(Icons.close_rounded),
+              icon2: const Icon(Icons.check_rounded),
+              value: todo.completed,
+              onPressed: () => context
+                  .read<AppStore>()
+                  .updateTodo(todo, state: !todo.completed),
+            ),
             trailing: IconButton(
               onPressed: () {
                 createTodoEditHelper(

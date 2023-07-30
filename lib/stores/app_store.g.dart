@@ -340,6 +340,15 @@ mixin _$AppStore on _AppStore, Store {
     return _$runAfterLoginAsyncAction.run(() => super.runAfterLogin());
   }
 
+  late final _$updateTodoAsyncAction =
+      AsyncAction('_AppStore.updateTodo', context: context);
+
+  @override
+  Future<dynamic> updateTodo(Todo todo, {required bool state}) {
+    return _$updateTodoAsyncAction
+        .run(() => super.updateTodo(todo, state: state));
+  }
+
   late final _$addTaskAsyncAction =
       AsyncAction('_AppStore.addTask', context: context);
 

@@ -1,23 +1,26 @@
-import 'dart:isolate';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mobx/mobx.dart';
 import 'package:remainder/db/getters.dart';
 import 'package:remainder/db/setters.dart';
+import 'package:remainder/main.dart';
 import 'package:remainder/models/remainder.dart';
 import 'package:remainder/models/todo.dart';
 import 'package:remainder/stores/login_store.dart';
 import 'package:remainder/stores/nav_store.dart';
 import 'package:remainder/models/categories.dart';
+import 'package:remainder/ui/toast_animation.dart';
 import 'package:remainder/utils.dart';
 part 'app_store.g.dart';
 
 class AppStore = _AppStore with _$AppStore;
 
 enum ThemeEnum { light, dark, system }
+
+enum ToastEnum { error, success }
 
 abstract class _AppStore with Store {
   static final categoriesRef =
@@ -58,8 +61,10 @@ abstract class _AppStore with Store {
     try {
       await updateDoc(remaindersRef.doc(id), {"enabled": state});
       remainders[categoryId]![index].enabled = state;
+      showToast(ToastEnum.success, "Remainder Updated");
       return true;
     } catch (e) {
+      showToast(ToastEnum.error, "Update Error");
       return false;
     } finally {
       remainders = ObservableMap.of(remainders);
@@ -135,7 +140,7 @@ abstract class _AppStore with Store {
       remainders.putIfAbsent(id, () => tasks);
       remainders = ObservableMap.of(remainders);
     } catch (e) {
-      print(e);
+      showToast(ToastEnum.error, "Error getting remainders");
     } finally {
       remaindersLoading = false;
     }
@@ -155,6 +160,7 @@ abstract class _AppStore with Store {
       this.todos.putIfAbsent(id, () => todos);
       this.todos = ObservableMap.of(this.todos);
     } catch (e) {
+      showToast(ToastEnum.error, "Error getting todos");
     } finally {
       todosLoading = false;
     }
@@ -166,13 +172,109 @@ abstract class _AppStore with Store {
       final categories = await getCategories(categoriesRef, userUID);
       this.categories = ObservableList.of(categories);
     } catch (e) {
+      showToast(ToastEnum.error, "Unable to get categories");
     } finally {}
+  }
+
+  FToast? toast;
+  AnimationController? controller;
+
+  void setToastInstance(FToast toast) {
+    this.toast = toast;
+  }
+
+  void showToast(ToastEnum type, String info) {
+    toast ??= FToast().init(navigatorKey.currentContext!);
+    switch (type) {
+      case ToastEnum.error:
+        toast!.showToast(
+          toastDuration: const Duration(seconds: 3),
+          child: ToastAnimation(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                boxShadow: Utils.cardBtnShadow,
+                borderRadius: Utils.borderRadiusRoundedCard,
+                color: Utils.lightSecondaryColor,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.close_rounded,
+                    color: Colors.red,
+                  ),
+                  Text(
+                    info,
+                    style: GoogleFonts.quicksand(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+      case ToastEnum.success:
+        toast!.showToast(
+          toastDuration: const Duration(seconds: 3),
+          child: ToastAnimation(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                boxShadow: Utils.cardBtnShadow,
+                borderRadius: Utils.borderRadiusRoundedCard,
+                color: Utils.lightSecondaryColor,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.check_rounded,
+                    color: Colors.greenAccent,
+                  ),
+                  Text(
+                    info,
+                    style: GoogleFonts.quicksand(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+      default:
+    }
   }
 
   @action
   void reloadCategory(String id) {
-    getTodosForCategory(id, refresh: true);
-    getRemaindersForCategory(id, refresh: true);
+    try {
+      getTodosForCategory(id, refresh: true);
+      getRemaindersForCategory(id, refresh: true);
+      showToast(ToastEnum.success, "Content Updated");
+    } catch (e) {
+      showToast(ToastEnum.error, "Error Reloading");
+    }
+  }
+
+  @action
+  Future updateTodo(Todo todo, {required bool state}) async {
+    try {
+      await updateDoc(todosRef.doc(todo.id), {"completed": state});
+      todos[todo.categoryId]!
+          .firstWhere((element) => element.id == todo.id)
+          .completed = state;
+      showToast(ToastEnum.success, "Todo Updated");
+      todos = ObservableMap.of(todos);
+    } catch (e) {
+      showToast(ToastEnum.error, "Unable to update todo");
+    } finally {}
   }
 
   @observable
@@ -241,22 +343,26 @@ abstract class _AppStore with Store {
         "enabled": true,
         "userId": userUID,
       });
-      final taskToAdd = Remainder.fromJSON({
-        "task": addTaskText,
-        "createdAt": DateTime.now(),
-        "time": addRemainderDateAndTime,
-        "days": addRemainderDays,
-        "categoryId": selectedCategory,
-        "id": taskDoc.id,
-        "enabled": true,
-      });
+      final taskToAdd = Remainder.fromJSON(
+        {
+          "task": addTaskText,
+          "createdAt": DateTime.now(),
+          "time": addRemainderDateAndTime,
+          "days": addRemainderDays,
+          "categoryId": selectedCategory,
+          "id": taskDoc.id,
+          "enabled": true,
+        },
+      );
       if (remainders.containsKey(selectedCategory)) {
         remainders[selectedCategory]!.add(taskToAdd);
       } else {
         remainders[selectedCategory!] = [taskToAdd];
       }
+      showToast(ToastEnum.success, "Added Successfully");
       return true;
     } catch (e) {
+      showToast(ToastEnum.success, "Unable to add Todo");
       return false;
     } finally {
       addingRemainder = false;
@@ -278,7 +384,9 @@ abstract class _AppStore with Store {
       DocumentReference docRef = await categoriesRef.add(data);
       categories.add(TaskCategory(id: docRef.id, name: addCategoryText));
       categories = ObservableList.of(categories);
+      showToast(ToastEnum.error, "Added Successfully");
     } catch (e) {
+      showToast(ToastEnum.error, "Updation Error");
     } finally {
       addCategoryText = '';
       addCategoryLoading = false;
@@ -310,8 +418,10 @@ abstract class _AppStore with Store {
       } else {
         todos[catId] = [todo];
       }
+      showToast(ToastEnum.success, "Remiander added");
       todos = ObservableMap.of(todos);
     } catch (e) {
+      showToast(ToastEnum.error, "Adding Remainder failed");
     } finally {
       addTodoText = '';
       addingTodoLoading = false;
@@ -329,8 +439,10 @@ abstract class _AppStore with Store {
       todos[todo.categoryId]!
           .firstWhere((element) => element.id == todo.id)
           .todo = addTodoText;
+      showToast(ToastEnum.success, "Todo Edited");
       todos = ObservableMap.of(todos);
     } catch (e) {
+      showToast(ToastEnum.error, "Unable to edit");
     } finally {
       addTodoText = '';
       addingTodoLoading = false;

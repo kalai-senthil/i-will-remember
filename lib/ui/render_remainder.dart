@@ -18,9 +18,6 @@ class RenderRemainder extends HookWidget {
       final task =
           (context.read<AppStore>().remainders[categoryId] ?? [])[index];
       return ListTile(
-        leading: const Icon(
-          Icons.check_circle_outlined,
-        ),
         trailing: ValueListenableBuilder(
           valueListenable: loading,
           builder: (context, value, w) {
@@ -57,10 +54,7 @@ class RenderRemainder extends HookWidget {
         ),
         title: Text(
           task.task,
-          style: GoogleFonts.quicksand(
-            decoration:
-                task.enabled ? TextDecoration.none : TextDecoration.lineThrough,
-          ),
+          style: GoogleFonts.quicksand(),
         ),
       );
     });

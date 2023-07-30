@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:remainder/firebase_options.dart';
@@ -8,6 +9,7 @@ import 'package:remainder/screens/screen_shower.dart';
 import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/utils.dart';
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -31,6 +33,8 @@ class MyApp extends StatelessWidget {
         builder: (context) {
           final theme = context.read<AppStore>().theme;
           return MaterialApp(
+            navigatorKey: navigatorKey,
+            builder: FToastBuilder(),
             title: 'Remainder',
             debugShowCheckedModeBanner: false,
             theme: theme == ThemeEnum.light

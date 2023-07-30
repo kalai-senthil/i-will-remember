@@ -11,9 +11,9 @@ class RenderTodos extends StatelessWidget {
   final String id;
   @override
   Widget build(BuildContext context) {
-    return Observer(
+    return Builder(
       builder: (context) {
-        final tasks = context.watch<AppStore>().todos[id] ?? [];
+        final tasks = context.read<AppStore>().todos[id] ?? [];
         if (tasks.isEmpty) {
           return CreateData(
             onTap: () => createTodoHelper(context: context, catId: id),

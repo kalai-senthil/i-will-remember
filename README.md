@@ -47,3 +47,10 @@
 - Editing todos
 - Refreshing capabilities
 - Bug Fixes
+
+## Day - 08
+
+- Todo Status Updation
+- Toast `fluttertoast` added
+- Custom toast for actions
+- Toast Animations
