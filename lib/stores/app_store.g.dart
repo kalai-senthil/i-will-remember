@@ -9,6 +9,20 @@ part of 'app_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppStore on _AppStore, Store {
+  Computed<String>? _$selectedMonthComputed;
+
+  @override
+  String get selectedMonth =>
+      (_$selectedMonthComputed ??= Computed<String>(() => super.selectedMonth,
+              name: '_AppStore.selectedMonth'))
+          .value;
+  Computed<List<String>>? _$daysToShowComputed;
+
+  @override
+  List<String> get daysToShow =>
+      (_$daysToShowComputed ??= Computed<List<String>>(() => super.daysToShow,
+              name: '_AppStore.daysToShow'))
+          .value;
   Computed<String>? _$userUIDComputed;
 
   @override
@@ -32,18 +46,35 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  late final _$todosAtom = Atom(name: '_AppStore.todos', context: context);
+  late final _$selectedDateAtom =
+      Atom(name: '_AppStore.selectedDate', context: context);
 
   @override
-  Map<String, List<Todo>> get todos {
-    _$todosAtom.reportRead();
-    return super.todos;
+  DateTime get selectedDate {
+    _$selectedDateAtom.reportRead();
+    return super.selectedDate;
   }
 
   @override
-  set todos(Map<String, List<Todo>> value) {
-    _$todosAtom.reportWrite(value, super.todos, () {
-      super.todos = value;
+  set selectedDate(DateTime value) {
+    _$selectedDateAtom.reportWrite(value, super.selectedDate, () {
+      super.selectedDate = value;
+    });
+  }
+
+  late final _$calendarViewAtom =
+      Atom(name: '_AppStore.calendarView', context: context);
+
+  @override
+  Map<String, List<CalendarWiseView>> get calendarView {
+    _$calendarViewAtom.reportRead();
+    return super.calendarView;
+  }
+
+  @override
+  set calendarView(Map<String, List<CalendarWiseView>> value) {
+    _$calendarViewAtom.reportWrite(value, super.calendarView, () {
+      super.calendarView = value;
     });
   }
 
@@ -286,6 +317,14 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$getCalWiseViewAsyncAction =
+      AsyncAction('_AppStore.getCalWiseView', context: context);
+
+  @override
+  Future<dynamic> getCalWiseView() {
+    return _$getCalWiseViewAsyncAction.run(() => super.getCalWiseView());
+  }
+
   late final _$toggleRemianderAsyncAction =
       AsyncAction('_AppStore.toggleRemiander', context: context);
 
@@ -385,6 +424,17 @@ mixin _$AppStore on _AppStore, Store {
       ActionController(name: '_AppStore', context: context);
 
   @override
+  void setSelectedDateToView(DateViewEnum dateViewEnum) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.setSelectedDateToView');
+    try {
+      return super.setSelectedDateToView(dateViewEnum);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void selectDayToAddRemainder(String d) {
     final _$actionInfo = _$_AppStoreActionController.startAction(
         name: '_AppStore.selectDayToAddRemainder');
@@ -465,7 +515,8 @@ mixin _$AppStore on _AppStore, Store {
   String toString() {
     return '''
 remainders: ${remainders},
-todos: ${todos},
+selectedDate: ${selectedDate},
+calendarView: ${calendarView},
 remaindersLoading: ${remaindersLoading},
 todosLoading: ${todosLoading},
 addingTodoLoading: ${addingTodoLoading},
@@ -481,6 +532,8 @@ addCategoryLoading: ${addCategoryLoading},
 categories: ${categories},
 isLoggedIn: ${isLoggedIn},
 theme: ${theme},
+selectedMonth: ${selectedMonth},
+daysToShow: ${daysToShow},
 userUID: ${userUID}
     ''';
   }

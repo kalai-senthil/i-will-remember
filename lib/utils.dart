@@ -33,6 +33,21 @@ final class Utils {
     ),
   ];
   static const days = ['Mon', 'Tue', "Wed", "Thu", "Fri", "Sat", "Sun"];
+  static const months = [
+    "",
+    'January',
+    'February',
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
   static const lightPrimaryColor = Color(0xfff6f6fe);
   static const cardPadding = EdgeInsets.symmetric(vertical: 5, horizontal: 10);
   static const lightSecondaryColor = Color(0xff121943);

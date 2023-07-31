@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
+import 'package:remainder/models/calwise_view.dart';
 import 'package:remainder/models/categories.dart';
 import 'package:remainder/models/remainder.dart';
 import 'package:remainder/models/todo.dart';
@@ -36,6 +38,78 @@ Future<List<Remainder>> getRemainders(
     }
   }
   return tasks;
+}
+
+Future<Map<String, List<CalendarWiseView>>> getCalendarWiseView(
+    CollectionReference remaindersRef,
+    CollectionReference todosRef,
+    String userId,
+    DateTime date) async {
+  final inMonth = [
+    Timestamp.fromDate(date),
+    Timestamp.fromDate(
+        DateTime(date.year, date.month + 1).subtract(const Duration(days: 1)))
+  ];
+  Map<String, List<CalendarWiseView>> cals = {};
+  QuerySnapshot docs = await todosRef
+      .where("userId", isEqualTo: userId)
+      .where("completed", isEqualTo: false)
+      .where("createdAt", isGreaterThan: inMonth[0])
+      .where("createdAt", isLessThan: inMonth[1])
+      .orderBy("createdAt")
+      .get();
+
+  for (DocumentSnapshot doc in docs.docs) {
+    if (doc.exists) {
+      final data = (doc.data() ?? {}) as Map;
+      if (data.isNotEmpty) {
+        data['createdAt'] = data['createdAt'].toDate();
+        Todo todo = Todo.fromJSON({...data, "id": doc.id});
+        final key = formatDate(data['createdAt'], [dd]);
+        final calWiseView = CalendarWiseView.fromJSON(
+          {
+            "isRemainder": false,
+            "todo": todo,
+          },
+        );
+        if (cals.containsKey(key)) {
+          cals[key]!.add(calWiseView);
+        } else {
+          cals.putIfAbsent(key, () => [calWiseView]);
+        }
+      }
+    }
+  }
+  docs = await remaindersRef
+      .where("userId", isEqualTo: userId)
+      .where("enabled", isEqualTo: true)
+      .where("createdAt", whereIn: inMonth)
+      .where("time", isGreaterThan: inMonth[0])
+      .where("time", isLessThan: inMonth[1])
+      .get();
+  for (DocumentSnapshot doc in docs.docs) {
+    if (doc.exists) {
+      final data = (doc.data() ?? {}) as Map;
+      if (data.isNotEmpty) {
+        data['createdAt'] = data['createdAt'].toDate();
+        Remainder remainder = Remainder.fromJSON({...data, "id": doc.id});
+        final key = formatDate(data['createdAt'], [dd]);
+        final calWiseView = CalendarWiseView.fromJSON(
+          {
+            "isRemainder": false,
+            "todo": remainder,
+          },
+        );
+        if (cals.containsKey(key)) {
+          cals[key]!.add(calWiseView);
+        } else {
+          cals.putIfAbsent(
+              formatDate(data['createdAt'], [dd]), () => [calWiseView]);
+        }
+      }
+    }
+  }
+  return cals;
 }
 
 Future<List<Todo>> getTodos(

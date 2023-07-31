@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,13 @@ import 'package:mobx/mobx.dart';
 import 'package:remainder/db/getters.dart';
 import 'package:remainder/db/setters.dart';
 import 'package:remainder/main.dart';
+import 'package:remainder/models/calwise_view.dart';
 import 'package:remainder/models/remainder.dart';
 import 'package:remainder/models/todo.dart';
 import 'package:remainder/stores/login_store.dart';
 import 'package:remainder/stores/nav_store.dart';
 import 'package:remainder/models/categories.dart';
+import 'package:remainder/ui/calendar_view.dart';
 import 'package:remainder/ui/toast_animation.dart';
 import 'package:remainder/utils.dart';
 part 'app_store.g.dart';
@@ -21,6 +24,8 @@ class AppStore = _AppStore with _$AppStore;
 enum ThemeEnum { light, dark, system }
 
 enum ToastEnum { error, success }
+
+enum DateViewEnum { next, prev, now }
 
 abstract class _AppStore with Store {
   static final categoriesRef =
@@ -44,6 +49,56 @@ abstract class _AppStore with Store {
   @observable
   Map<String, List<Remainder>> remainders = {};
   @observable
+  @observable
+  DateTime selectedDate =
+      ((DateTime d) => DateTime(d.year, d.month))(DateTime.now());
+  @computed
+  String get selectedMonth => Utils.months[selectedDate.month];
+  @observable
+  Map<String, List<CalendarWiseView>> calendarView = {};
+  @computed
+  List<String> get daysToShow {
+    DateTime d = DateTime(selectedDate.year, selectedDate.month);
+    List<String> daysToShowTemp = [];
+    while (d.month == selectedDate.month) {
+      daysToShowTemp.add(formatDate(d, [dd]));
+      d = d.add(const Duration(days: 1));
+    }
+    return daysToShowTemp;
+  }
+
+  @action
+  void setSelectedDateToView(DateViewEnum dateViewEnum) {
+    switch (dateViewEnum) {
+      case DateViewEnum.next:
+        selectedDate = DateTime(selectedDate.year, selectedDate.month + 1);
+        break;
+      case DateViewEnum.prev:
+        selectedDate = DateTime(selectedDate.year, selectedDate.month - 1);
+        break;
+      case DateViewEnum.now:
+        selectedDate = ((d) => DateTime(d.year, d.month))(DateTime.now());
+        break;
+      default:
+    }
+    getCalWiseView();
+  }
+
+  @action
+  Future getCalWiseView() async {
+    try {
+      final data = await getCalendarWiseView(
+        remaindersRef,
+        todosRef,
+        userUID,
+        selectedDate,
+      );
+      calendarView = ObservableMap.of(data);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Map<String, List<Todo>> todos = {};
   @observable
   bool remaindersLoading = false;

@@ -54,3 +54,8 @@
 - Toast `fluttertoast` added
 - Custom toast for actions
 - Toast Animations
+
+## Day - 09
+
+- Calendar Wise View
+- Fetch month wise `Todos/Remainders`
