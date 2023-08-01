@@ -78,6 +78,38 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$calShowViewKeyAtom =
+      Atom(name: '_AppStore.calShowViewKey', context: context);
+
+  @override
+  String? get calShowViewKey {
+    _$calShowViewKeyAtom.reportRead();
+    return super.calShowViewKey;
+  }
+
+  @override
+  set calShowViewKey(String? value) {
+    _$calShowViewKeyAtom.reportWrite(value, super.calShowViewKey, () {
+      super.calShowViewKey = value;
+    });
+  }
+
+  late final _$calWiseViewLoadingAtom =
+      Atom(name: '_AppStore.calWiseViewLoading', context: context);
+
+  @override
+  bool get calWiseViewLoading {
+    _$calWiseViewLoadingAtom.reportRead();
+    return super.calWiseViewLoading;
+  }
+
+  @override
+  set calWiseViewLoading(bool value) {
+    _$calWiseViewLoadingAtom.reportWrite(value, super.calWiseViewLoading, () {
+      super.calWiseViewLoading = value;
+    });
+  }
+
   late final _$remaindersLoadingAtom =
       Atom(name: '_AppStore.remaindersLoading', context: context);
 
@@ -435,6 +467,17 @@ mixin _$AppStore on _AppStore, Store {
   }
 
   @override
+  void setCalShowViewKey(String key) {
+    final _$actionInfo = _$_AppStoreActionController.startAction(
+        name: '_AppStore.setCalShowViewKey');
+    try {
+      return super.setCalShowViewKey(key);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void selectDayToAddRemainder(String d) {
     final _$actionInfo = _$_AppStoreActionController.startAction(
         name: '_AppStore.selectDayToAddRemainder');
@@ -517,6 +560,8 @@ mixin _$AppStore on _AppStore, Store {
 remainders: ${remainders},
 selectedDate: ${selectedDate},
 calendarView: ${calendarView},
+calShowViewKey: ${calShowViewKey},
+calWiseViewLoading: ${calWiseViewLoading},
 remaindersLoading: ${remaindersLoading},
 todosLoading: ${todosLoading},
 addingTodoLoading: ${addingTodoLoading},

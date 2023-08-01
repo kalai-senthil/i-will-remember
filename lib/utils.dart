@@ -4,6 +4,9 @@ import 'package:remainder/screens/settings.dart';
 import 'package:remainder/types.dart';
 import 'dart:developer' show log;
 
+import 'package:remainder/ui/home_view.dart';
+import 'package:remainder/ui/task_categories.dart';
+
 final class CollectionKeys {
   static const users = "users";
   static const remainders = "remainders";
@@ -31,6 +34,10 @@ final class Utils {
       index: 1,
       screen: const Settings(),
     ),
+  ];
+  static final List<Widget> homeItems = [
+    const HomwView(),
+    const TaskCategories()
   ];
   static const days = ['Mon', 'Tue', "Wed", "Thu", "Fri", "Sat", "Sun"];
   static const months = [

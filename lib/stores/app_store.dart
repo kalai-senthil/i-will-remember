@@ -84,18 +84,35 @@ abstract class _AppStore with Store {
     getCalWiseView();
   }
 
+  @observable
+  String? calShowViewKey;
+  @observable
+  bool calWiseViewLoading = true;
+  @action
+  void setCalShowViewKey(String key) {
+    calShowViewKey = key;
+  }
+
   @action
   Future getCalWiseView() async {
     try {
+      calWiseViewLoading = true;
+      calShowViewKey = null;
       final data = await getCalendarWiseView(
         remaindersRef,
         todosRef,
         userUID,
         selectedDate,
       );
+      if (data.isNotEmpty) {
+        calShowViewKey = data.keys.first;
+      }
+      showToast(ToastEnum.success, "Updated");
       calendarView = ObservableMap.of(data);
     } catch (e) {
-      print(e);
+      showToast(ToastEnum.error, "Error Updating");
+    } finally {
+      calWiseViewLoading = false;
     }
   }
 
@@ -226,6 +243,7 @@ abstract class _AppStore with Store {
     try {
       final categories = await getCategories(categoriesRef, userUID);
       this.categories = ObservableList.of(categories);
+      getCalWiseView();
     } catch (e) {
       showToast(ToastEnum.error, "Unable to get categories");
     } finally {}

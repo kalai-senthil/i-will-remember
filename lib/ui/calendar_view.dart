@@ -44,33 +44,35 @@ class CalendarView extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      onPressed: () => context
+                    InkWell(
+                      onTap: () => context
                           .read<AppStore>()
                           .setSelectedDateToView(DateViewEnum.now),
-                      icon: const Icon(
+                      child: const Icon(
                         Icons.refresh_rounded,
                       ),
                     ),
-                    IconButton(
-                      onPressed: () => context
+                    InkWell(
+                      onTap: () => context
                           .read<AppStore>()
                           .setSelectedDateToView(DateViewEnum.prev),
-                      icon: Transform.rotate(
+                      child: Transform.rotate(
                         angle: pi / 2,
                         child: const Icon(
                           Icons.arrow_drop_down_rounded,
+                          size: 30,
                         ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () => context
+                    InkWell(
+                      onTap: () => context
                           .read<AppStore>()
                           .setSelectedDateToView(DateViewEnum.next),
-                      icon: Transform.rotate(
+                      child: Transform.rotate(
                         angle: -pi / 2,
                         child: const Icon(
                           Icons.arrow_drop_down_rounded,
+                          size: 30,
                         ),
                       ),
                     ),
@@ -89,26 +91,36 @@ class CalendarView extends StatelessWidget {
                       builder: (context) {
                         final hasMarked =
                             context.read<AppStore>().calendarView[e] != null;
+                        final isCurrentlyViewing =
+                            context.read<AppStore>().calShowViewKey == e;
                         return Container(
                           decoration: BoxDecoration(
                             borderRadius: Utils.borderRadiusRoundedFull,
-                            color: hasMarked
-                                ? Utils.darkPrimaryColor
-                                : Utils.lightPrimaryColor,
+                            color: isCurrentlyViewing
+                                ? Utils.lightSecondaryColor
+                                : hasMarked
+                                    ? Utils.darkPrimaryColor
+                                    : Utils.lightPrimaryColor,
                           ),
-                          child: SizedBox.fromSize(
-                            size: const Size.square(50),
-                            child: AspectRatio(
-                              aspectRatio: 1.0,
-                              child: Center(
-                                child: Text(
-                                  e,
-                                  style: GoogleFonts.quicksand(
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        hasMarked ? Colors.white : Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              context.read<AppStore>().setCalShowViewKey(e);
+                            },
+                            child: SizedBox.fromSize(
+                              size: const Size.square(50),
+                              child: AspectRatio(
+                                aspectRatio: 1.0,
+                                child: Center(
+                                  child: Text(
+                                    e,
+                                    style: GoogleFonts.quicksand(
+                                      fontWeight: FontWeight.w500,
+                                      color: isCurrentlyViewing || hasMarked
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),

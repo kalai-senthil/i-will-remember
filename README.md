@@ -59,3 +59,10 @@
 
 - Calendar Wise View
 - Fetch month wise `Todos/Remainders`
+
+## Day - 10
+
+- Calendar Wise View Updation
+- _Tasks/Remainders_ Present Indicator
+- Able to view tasks at certain `date`
+- Added Drawer

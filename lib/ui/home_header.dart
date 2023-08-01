@@ -23,14 +23,17 @@ class HomeHeader extends StatelessWidget {
           Observer(
             builder: (context) {
               final isDark = context.read<AppStore>().theme == ThemeEnum.dark;
-              return SvgPicture.asset(
-                "assets/more_options.svg",
-                theme: SvgTheme(
-                  currentColor: isDark
-                      ? Colors.white
-                      : const Color(
-                          0xff3a3d4d,
-                        ),
+              return InkWell(
+                onTap: Scaffold.of(context).openDrawer,
+                child: SvgPicture.asset(
+                  "assets/more_options.svg",
+                  theme: SvgTheme(
+                    currentColor: isDark
+                        ? Colors.white
+                        : const Color(
+                            0xff3a3d4d,
+                          ),
+                  ),
                 ),
               );
             },

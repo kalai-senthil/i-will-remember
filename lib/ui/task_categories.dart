@@ -33,17 +33,19 @@ class TaskCategories extends StatelessWidget {
                 onTap: () => createCategoryHelper(context: context),
               );
             }
-            return ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 170),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return RenderCategory(
-                    category: categories.elementAt(index),
-                  );
-                },
-                itemCount: categories.length,
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 16 / 20,
               ),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return RenderCategory(
+                  category: categories.elementAt(index),
+                );
+              },
+              itemCount: categories.length,
             );
           },
         )
