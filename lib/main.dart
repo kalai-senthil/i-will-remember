@@ -8,10 +8,12 @@ import 'package:remainder/firebase_options.dart';
 import 'package:remainder/screens/screen_shower.dart';
 import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/utils.dart';
+import 'package:alarm/alarm.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Alarm.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

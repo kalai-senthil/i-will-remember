@@ -169,6 +169,53 @@ class NewWidget extends StatelessWidget {
                   ),
                 ),
                 InfoShowWithIcon(
+                    icon: const Icon(
+                      Icons.music_note_rounded,
+                      color: Utils.primaryColor,
+                    ),
+                    info: "Tone",
+                    child: Observer(builder: (context) {
+                      final remainderTone =
+                          context.read<AppStore>().remainderTone;
+                      return Row(
+                        children: [
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: Text(
+                              remainderTone.split("/").last,
+                              style: GoogleFonts.quicksand(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Observer(builder: (context) {
+                                final playing =
+                                    context.read<AppStore>().playing;
+                                return InkWell(
+                                  onTap: context.read<AppStore>().togglePlay,
+                                  child: Icon(
+                                    playing
+                                        ? Icons.stop_rounded
+                                        : Icons.play_arrow_rounded,
+                                  ),
+                                );
+                              }),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap:
+                                    context.read<AppStore>().setRemainderTone,
+                                child: Icon(
+                                  Icons.edit_outlined,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    })),
+                InfoShowWithIcon(
                   icon: const Icon(
                     Icons.interests_outlined,
                     color: Utils.primaryColor,

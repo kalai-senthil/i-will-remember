@@ -52,19 +52,19 @@ class HomeHeader extends StatelessWidget {
                         0xfff6f6fe,
                       ),
               ),
-              child: const Row(
-                children: [
-                  CircleAvatar(
+              child: Observer(builder: (context) {
+                final user = context.read<AppStore>().user;
+                if (user != null) {
+                  return CircleAvatar(
                     maxRadius: 18,
                     backgroundImage: NetworkImage(
-                      "https://cdn.dribbble.com/userupload/2746192/file/original-263c04f911d1ad2bea69e86010ea7b32.jpg?resize=1200x900&vertical=center",
+                      "${user.photoURL}",
                     ),
-                  ),
-                  Icon(
-                    Icons.more_vert_rounded,
-                  ),
-                ],
-              ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
             );
           })
         ],

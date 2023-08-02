@@ -66,3 +66,10 @@
 - _Tasks/Remainders_ Present Indicator
 - Able to view tasks at certain `date`
 - Added Drawer
+
+## Day - 11
+
+- Alarm Setting
+- Disabling remainders with Alarms
+- Load Custom alarm sounds
+- Bug Fixes

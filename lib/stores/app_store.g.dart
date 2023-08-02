@@ -110,6 +110,21 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$todosAtom = Atom(name: '_AppStore.todos', context: context);
+
+  @override
+  Map<String, List<Todo>> get todos {
+    _$todosAtom.reportRead();
+    return super.todos;
+  }
+
+  @override
+  set todos(Map<String, List<Todo>> value) {
+    _$todosAtom.reportWrite(value, super.todos, () {
+      super.todos = value;
+    });
+  }
+
   late final _$remaindersLoadingAtom =
       Atom(name: '_AppStore.remaindersLoading', context: context);
 
@@ -349,6 +364,37 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$remainderToneAtom =
+      Atom(name: '_AppStore.remainderTone', context: context);
+
+  @override
+  String get remainderTone {
+    _$remainderToneAtom.reportRead();
+    return super.remainderTone;
+  }
+
+  @override
+  set remainderTone(String value) {
+    _$remainderToneAtom.reportWrite(value, super.remainderTone, () {
+      super.remainderTone = value;
+    });
+  }
+
+  late final _$playingAtom = Atom(name: '_AppStore.playing', context: context);
+
+  @override
+  bool get playing {
+    _$playingAtom.reportRead();
+    return super.playing;
+  }
+
+  @override
+  set playing(bool value) {
+    _$playingAtom.reportWrite(value, super.playing, () {
+      super.playing = value;
+    });
+  }
+
   late final _$getCalWiseViewAsyncAction =
       AsyncAction('_AppStore.getCalWiseView', context: context);
 
@@ -411,6 +457,14 @@ mixin _$AppStore on _AppStore, Store {
     return _$runAfterLoginAsyncAction.run(() => super.runAfterLogin());
   }
 
+  late final _$setRemainderToneAsyncAction =
+      AsyncAction('_AppStore.setRemainderTone', context: context);
+
+  @override
+  Future<dynamic> setRemainderTone() {
+    return _$setRemainderToneAsyncAction.run(() => super.setRemainderTone());
+  }
+
   late final _$updateTodoAsyncAction =
       AsyncAction('_AppStore.updateTodo', context: context);
 
@@ -418,6 +472,14 @@ mixin _$AppStore on _AppStore, Store {
   Future<dynamic> updateTodo(Todo todo, {required bool state}) {
     return _$updateTodoAsyncAction
         .run(() => super.updateTodo(todo, state: state));
+  }
+
+  late final _$togglePlayAsyncAction =
+      AsyncAction('_AppStore.togglePlay', context: context);
+
+  @override
+  Future<dynamic> togglePlay() {
+    return _$togglePlayAsyncAction.run(() => super.togglePlay());
   }
 
   late final _$addTaskAsyncAction =
@@ -562,6 +624,7 @@ selectedDate: ${selectedDate},
 calendarView: ${calendarView},
 calShowViewKey: ${calShowViewKey},
 calWiseViewLoading: ${calWiseViewLoading},
+todos: ${todos},
 remaindersLoading: ${remaindersLoading},
 todosLoading: ${todosLoading},
 addingTodoLoading: ${addingTodoLoading},
@@ -577,6 +640,8 @@ addCategoryLoading: ${addCategoryLoading},
 categories: ${categories},
 isLoggedIn: ${isLoggedIn},
 theme: ${theme},
+remainderTone: ${remainderTone},
+playing: ${playing},
 selectedMonth: ${selectedMonth},
 daysToShow: ${daysToShow},
 userUID: ${userUID}

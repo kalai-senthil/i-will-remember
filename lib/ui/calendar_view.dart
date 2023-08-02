@@ -80,56 +80,64 @@ class CalendarView extends StatelessWidget {
                 )
               ],
             ),
-            Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 10,
-              runSpacing: 10,
-              children: daysToShow
-                  .map(
-                    (e) => Observer(
-                      builder: (context) {
-                        final hasMarked =
-                            context.read<AppStore>().calendarView[e] != null;
-                        final isCurrentlyViewing =
-                            context.read<AppStore>().calShowViewKey == e;
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: Utils.borderRadiusRoundedFull,
-                            color: isCurrentlyViewing
-                                ? Utils.lightSecondaryColor
-                                : hasMarked
-                                    ? Utils.darkPrimaryColor
-                                    : Utils.lightPrimaryColor,
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              context.read<AppStore>().setCalShowViewKey(e);
-                            },
-                            child: SizedBox.fromSize(
-                              size: const Size.square(50),
-                              child: AspectRatio(
-                                aspectRatio: 1.0,
-                                child: Center(
-                                  child: Text(
-                                    e,
-                                    style: GoogleFonts.quicksand(
-                                      fontWeight: FontWeight.w500,
-                                      color: isCurrentlyViewing || hasMarked
-                                          ? Colors.white
-                                          : Colors.black,
+            GestureDetector(
+              onHorizontalDragEnd: (e) {
+                context.read<AppStore>().setSelectedDateToView(
+                    e.primaryVelocity! > 0
+                        ? DateViewEnum.next
+                        : DateViewEnum.prev);
+              },
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 10,
+                runSpacing: 10,
+                children: daysToShow
+                    .map(
+                      (e) => Observer(
+                        builder: (context) {
+                          final hasMarked =
+                              context.read<AppStore>().calendarView[e] != null;
+                          final isCurrentlyViewing =
+                              context.read<AppStore>().calShowViewKey == e;
+                          return Container(
+                            decoration: BoxDecoration(
+                              borderRadius: Utils.borderRadiusRoundedFull,
+                              color: isCurrentlyViewing
+                                  ? Utils.lightSecondaryColor
+                                  : hasMarked
+                                      ? Utils.darkPrimaryColor
+                                      : Utils.lightPrimaryColor,
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                context.read<AppStore>().setCalShowViewKey(e);
+                              },
+                              child: SizedBox.fromSize(
+                                size: const Size.square(50),
+                                child: AspectRatio(
+                                  aspectRatio: 1.0,
+                                  child: Center(
+                                    child: Text(
+                                      e,
+                                      style: GoogleFonts.quicksand(
+                                        fontWeight: FontWeight.w500,
+                                        color: isCurrentlyViewing || hasMarked
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                  .toList(),
+                          );
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ],
         );

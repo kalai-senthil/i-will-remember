@@ -32,6 +32,7 @@ Future<List<Remainder>> getRemainders(
     if (doc.exists) {
       final data = (doc.data() ?? {}) as Map;
       data['createdAt'] = data['createdAt'].toDate();
+      data['time'] = data['time'].toDate();
       if (data.isNotEmpty) {
         tasks.add(Remainder.fromJSON({...data, "id": doc.id}));
       }

@@ -25,6 +25,7 @@ class RenderTodo extends HookWidget {
         ),
       ),
       child: Observer(
+        warnWhenNoObservables: true,
         builder: (context) {
           final todo =
               (context.read<AppStore>().todos[categoryId] ?? [])[index];

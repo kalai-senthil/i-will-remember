@@ -1,10 +1,16 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:remainder/db/getters.dart';
 import 'package:remainder/db/setters.dart';
 import 'package:remainder/main.dart';
@@ -14,7 +20,8 @@ import 'package:remainder/models/todo.dart';
 import 'package:remainder/stores/login_store.dart';
 import 'package:remainder/stores/nav_store.dart';
 import 'package:remainder/models/categories.dart';
-import 'package:remainder/ui/calendar_view.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:alarm/alarm.dart';
 import 'package:remainder/ui/toast_animation.dart';
 import 'package:remainder/utils.dart';
 part 'app_store.g.dart';
@@ -116,6 +123,7 @@ abstract class _AppStore with Store {
     }
   }
 
+  @observable
   Map<String, List<Todo>> todos = {};
   @observable
   bool remaindersLoading = false;
@@ -133,6 +141,18 @@ abstract class _AppStore with Store {
     try {
       await updateDoc(remaindersRef.doc(id), {"enabled": state});
       remainders[categoryId]![index].enabled = state;
+      if (state) {
+        final remainder = remainders[categoryId]![index];
+        await Alarm.set(
+          alarmSettings: AlarmSettings(
+            id: remainder.alarmId,
+            dateTime: remainder.time,
+            assetAudioPath: remainder.tone,
+          ),
+        );
+      } else {
+        await Alarm.stop(remainders[categoryId]![index].alarmId);
+      }
       showToast(ToastEnum.success, "Remainder Updated");
       return true;
     } catch (e) {
@@ -241,6 +261,9 @@ abstract class _AppStore with Store {
   @action
   Future runAfterLogin() async {
     try {
+      player.onPlayerComplete.listen((event) {
+        playing = false;
+      });
       final categories = await getCategories(categoriesRef, userUID);
       this.categories = ObservableList.of(categories);
       getCalWiseView();
@@ -337,14 +360,41 @@ abstract class _AppStore with Store {
   }
 
   @action
+  Future setRemainderTone() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ["mp3"],
+        withData: true,
+        withReadStream: true,
+      );
+      if (result != null && result.files.isNotEmpty) {
+        String docPath = (await getApplicationDocumentsDirectory()).path;
+        PlatformFile file = result.files.single;
+        File _file = await File("$docPath/${file.name}").writeAsBytes(
+            file.bytes!.toList(),
+            flush: true,
+            mode: FileMode.write);
+        remainderTone = _file.path;
+        showToast(ToastEnum.success, "File Selected");
+      } else {
+        showToast(ToastEnum.error, "Selection Cancelled");
+      }
+    } catch (e) {
+      print(e);
+      showToast(ToastEnum.error, "Error Loading File");
+    }
+  }
+
+  @action
   Future updateTodo(Todo todo, {required bool state}) async {
     try {
       await updateDoc(todosRef.doc(todo.id), {"completed": state});
       todos[todo.categoryId]!
           .firstWhere((element) => element.id == todo.id)
           .completed = state;
-      showToast(ToastEnum.success, "Todo Updated");
       todos = ObservableMap.of(todos);
+      showToast(ToastEnum.success, "Todo Updated");
     } catch (e) {
       showToast(ToastEnum.error, "Unable to update todo");
     } finally {}
@@ -379,6 +429,7 @@ abstract class _AppStore with Store {
   @observable
   ThemeEnum theme = ThemeEnum.light;
 
+  final player = AudioPlayer();
   @action
   void setAddCategoryText(String d) {
     addCategoryText = d.trim();
@@ -401,12 +452,37 @@ abstract class _AppStore with Store {
   }
 
   @action
+  Future togglePlay() async {
+    try {
+      if (playing) {
+        player.stop();
+        playing = false;
+      } else {
+        playing = true;
+        if (remainderTone.contains("assets")) {
+          await player.play(AssetSource(remainderTone.substring(7)));
+        } else {
+          await player.play(DeviceFileSource(remainderTone));
+        }
+      }
+    } catch (e) {
+      playing = false;
+      showToast(ToastEnum.error, "Error Playing");
+    }
+  }
+
+  @observable
+  String remainderTone = "assets/alarm.mp3";
+  @observable
+  bool playing = false;
+  @action
   Future<bool> addTask() async {
     try {
-      if (selectedCategory == null) {
+      if (selectedCategory == null || addTaskText == null) {
         return false;
       }
       addingRemainder = true;
+      final alarmId = remaindersRef.doc().id.hashCode;
       final taskDoc = await addRemainderToDB(remaindersRef, {
         "task": addTaskText,
         "createdAt": FieldValue.serverTimestamp(),
@@ -415,6 +491,8 @@ abstract class _AppStore with Store {
         "categoryId": selectedCategory,
         "enabled": true,
         "userId": userUID,
+        "tone": remainderTone,
+        "alarmId": alarmId
       });
       final taskToAdd = Remainder.fromJSON(
         {
@@ -425,6 +503,8 @@ abstract class _AppStore with Store {
           "categoryId": selectedCategory,
           "id": taskDoc.id,
           "enabled": true,
+          "tone": remainderTone,
+          "alarmId": alarmId
         },
       );
       if (remainders.containsKey(selectedCategory)) {
@@ -432,15 +512,27 @@ abstract class _AppStore with Store {
       } else {
         remainders[selectedCategory!] = [taskToAdd];
       }
+      await Alarm.set(
+        alarmSettings: AlarmSettings(
+          id: alarmId,
+          dateTime: addRemainderDateAndTime,
+          assetAudioPath: remainderTone,
+          notificationBody: addTaskText,
+          notificationTitle:
+              "Remainder ${categories.firstWhere((element) => element.id == selectedCategory).name}",
+        ),
+      );
       showToast(ToastEnum.success, "Added Successfully");
       return true;
     } catch (e) {
-      showToast(ToastEnum.success, "Unable to add Todo");
+      print(e);
+      showToast(ToastEnum.error, "Unable to add Todo");
       return false;
     } finally {
       addingRemainder = false;
       addTaskText = null;
       selectedCategory = null;
+      remainderTone = "assets/alarm.mp3";
       addRemainderDays.clear();
       addRemainderDateAndTime = DateTime.now();
     }
