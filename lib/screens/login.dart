@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:remainder/stores/app_store.dart';
@@ -40,12 +41,13 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (context) {
+      final isRegister = context.read<AppStore>().loginStore.isRegister;
       final isLoggingIn = context.read<AppStore>().loginStore.isLoggingIn;
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const PageHeader(
-            title: "Login",
+          PageHeader(
+            title: isRegister ? "Register" : "Login",
           ),
           InputWidget(
             onChange: context.read<AppStore>().loginStore.setUserMail,
@@ -76,13 +78,15 @@ class LoginForm extends StatelessWidget {
             },
           ),
           const SizedBox(
-            height: 80,
+            height: 40,
           ),
           Row(
             children: [
               Expanded(
                 child: TextButton.icon(
-                  onPressed: context.read<AppStore>().loginStore.logIn,
+                  onPressed: isRegister
+                      ? context.read<AppStore>().loginStore.register
+                      : context.read<AppStore>().loginStore.logIn,
                   icon: isLoggingIn
                       ? const SizedBox(
                           width: 15,
@@ -94,13 +98,112 @@ class LoginForm extends StatelessWidget {
                       ? const Text(
                           "Logging you in",
                         )
-                      : const Text(
-                          "Login",
+                      : Text(
+                          isRegister ? "Register" : "Login",
                         ),
                 ),
               ),
             ],
-          )
+          ),
+          InkWell(
+            onTap: isLoggingIn
+                ? null
+                : context.read<AppStore>().loginStore.changeLoginType,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 5),
+              child: Text(
+                "Register",
+                style: GoogleFonts.quicksand(
+                  color: Utils.darkPrimaryColor,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              "Continue with",
+              style: GoogleFonts.quicksand(),
+            ),
+          ),
+          Flex(
+            direction: Axis.horizontal,
+            children: [
+              Flexible(
+                child: InkWell(
+                  onTap: isLoggingIn
+                      ? null
+                      : context.read<AppStore>().loginStore.withGoogle,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: Utils.borderRadiusRoundedCard,
+                      color: Utils.lightPrimaryColor,
+                      boxShadow: Utils.cardBtnShadow,
+                      border: Border.all(
+                        color: Utils.darkPrimaryColor,
+                      ),
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/google.svg",
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Google",
+                          style: GoogleFonts.quicksand(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Flexible(
+                child: InkWell(
+                  onTap: isLoggingIn
+                      ? null
+                      : context.read<AppStore>().loginStore.withGithub,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: Utils.borderRadiusRoundedCard,
+                      color: Utils.lightPrimaryColor,
+                      boxShadow: Utils.cardBtnShadow,
+                      border: Border.all(
+                        color: Utils.darkPrimaryColor,
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/github.svg",
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Github",
+                          style: GoogleFonts.quicksand(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       );
     });

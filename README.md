@@ -73,3 +73,10 @@
 - Disabling remainders with Alarms
 - Load Custom alarm sounds
 - Bug Fixes
+
+## Day - 12
+
+- Register Page UI
+- Firebase Auth Registration
+- `Google`,`Github` Auth Provider Sign Up
+- Rive Dependencies Added

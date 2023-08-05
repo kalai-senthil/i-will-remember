@@ -25,6 +25,22 @@ mixin _$LoginStore on _LoginStore, Store {
     });
   }
 
+  late final _$isRegisterAtom =
+      Atom(name: '_LoginStore.isRegister', context: context);
+
+  @override
+  bool get isRegister {
+    _$isRegisterAtom.reportRead();
+    return super.isRegister;
+  }
+
+  @override
+  set isRegister(bool value) {
+    _$isRegisterAtom.reportWrite(value, super.isRegister, () {
+      super.isRegister = value;
+    });
+  }
+
   late final _$userEmailAtom =
       Atom(name: '_LoginStore.userEmail', context: context);
 
@@ -72,6 +88,30 @@ mixin _$LoginStore on _LoginStore, Store {
     });
   }
 
+  late final _$withGoogleAsyncAction =
+      AsyncAction('_LoginStore.withGoogle', context: context);
+
+  @override
+  Future<dynamic> withGoogle() {
+    return _$withGoogleAsyncAction.run(() => super.withGoogle());
+  }
+
+  late final _$withGithubAsyncAction =
+      AsyncAction('_LoginStore.withGithub', context: context);
+
+  @override
+  Future<dynamic> withGithub() {
+    return _$withGithubAsyncAction.run(() => super.withGithub());
+  }
+
+  late final _$registerAsyncAction =
+      AsyncAction('_LoginStore.register', context: context);
+
+  @override
+  Future<dynamic> register() {
+    return _$registerAsyncAction.run(() => super.register());
+  }
+
   late final _$logInAsyncAction =
       AsyncAction('_LoginStore.logIn', context: context);
 
@@ -95,6 +135,17 @@ mixin _$LoginStore on _LoginStore, Store {
   }
 
   @override
+  void changeLoginType() {
+    final _$actionInfo = _$_LoginStoreActionController.startAction(
+        name: '_LoginStore.changeLoginType');
+    try {
+      return super.changeLoginType();
+    } finally {
+      _$_LoginStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setPassword(String pass) {
     final _$actionInfo = _$_LoginStoreActionController.startAction(
         name: '_LoginStore.setPassword');
@@ -109,6 +160,7 @@ mixin _$LoginStore on _LoginStore, Store {
   String toString() {
     return '''
 isLoggingIn: ${isLoggingIn},
+isRegister: ${isRegister},
 userEmail: ${userEmail},
 password: ${password},
 error: ${error}

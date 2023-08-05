@@ -48,6 +48,7 @@ abstract class _AppStore with Store {
         navStore.setScreen(Screen.login);
         return;
       }
+      navStore.setScreen(Screen.home);
       isLoggedIn = true;
       this.user = user;
       runAfterLogin();

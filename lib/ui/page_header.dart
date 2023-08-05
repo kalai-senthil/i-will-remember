@@ -6,12 +6,16 @@ class PageHeader extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: GoogleFonts.quicksand(
-        fontWeight: FontWeight.w800,
-        fontSize: 25,
-      ),
+    return Row(
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.quicksand(
+            fontWeight: FontWeight.w800,
+            fontSize: 25,
+          ),
+        ),
+      ],
     );
   }
 }

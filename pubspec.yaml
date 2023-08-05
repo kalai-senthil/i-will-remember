@@ -48,6 +48,7 @@ dependencies:
   mobx_codegen: ^2.3.0
   path_provider: ^2.0.15
   provider: ^6.0.5
+  rive: ^0.11.11
 
 dev_dependencies:
   flutter_lints: ^2.0.0

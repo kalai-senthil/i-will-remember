@@ -66,6 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1087981444280',
     projectId: 'remainder-12352',
     storageBucket: 'remainder-12352.appspot.com',
+    androidClientId: '1087981444280-nc3l94kbqafe0gv87gvo83rds2a084s2.apps.googleusercontent.com',
     iosClientId: '1087981444280-jbiolftuqqbd3giiamrajcd0nnthlrqr.apps.googleusercontent.com',
     iosBundleId: 'com.boringtimes.copier.copier',
   );
@@ -76,6 +77,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1087981444280',
     projectId: 'remainder-12352',
     storageBucket: 'remainder-12352.appspot.com',
+    androidClientId: '1087981444280-nc3l94kbqafe0gv87gvo83rds2a084s2.apps.googleusercontent.com',
     iosClientId: '1087981444280-v9o6dche2g0d5qs7k7k89d2stcjdj4fk.apps.googleusercontent.com',
     iosBundleId: 'com.boringtimes.copier.copier.RunnerTests',
   );

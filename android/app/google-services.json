@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1087981444280-8nccr7n1re3qkq0dfnfebr1i2j8pjoob.apps.googleusercontent.com",
+          "client_id": "1087981444280-cbska8f9mf28g2env0p3kdnph7023kc9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boringtimes.copier.copier",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1087981444280-aaq8blqkc612sklr3boh5m7rra86bnnu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +37,13 @@
             {
               "client_id": "1087981444280-8nccr7n1re3qkq0dfnfebr1i2j8pjoob.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1087981444280-jbiolftuqqbd3giiamrajcd0nnthlrqr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boringtimes.copier.copier"
+              }
             }
           ]
         }
