@@ -80,3 +80,7 @@
 - Firebase Auth Registration
 - `Google`,`Github` Auth Provider Sign Up
 - Rive Dependencies Added
+
+## Day - 13
+
+- Settings Page

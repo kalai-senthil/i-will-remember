@@ -28,27 +28,25 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  alarm: ^1.1.7
-  audioplayers: ^5.0.0
+  alarm: ^1.2.2
+  audioplayers: ^5.1.0
   build_runner: ^2.4.6
-  cloud_firestore: ^4.8.3
-  cupertino_icons: ^1.0.2
+  cloud_firestore: ^4.8.5
   date_format: ^2.0.7
   file_picker: ^5.3.3
-  firebase_auth: ^4.7.1
-  firebase_core: ^2.15.0
+  firebase_auth: ^4.7.3
+  firebase_core: ^2.15.1
   flutter:
     sdk: flutter
-  flutter_hooks: ^0.19.0
+  flutter_hooks: ^0.20.0
   flutter_mobx: ^2.0.6+5
   flutter_svg: ^2.0.7
   fluttertoast: ^8.2.2
   google_fonts: ^5.1.0
+  mobkit_enum_generator: ^0.1.2
   mobx: ^2.2.0
-  mobx_codegen: ^2.3.0
-  path_provider: ^2.0.15
   provider: ^6.0.5
-  rive: ^0.11.11
+  rive: ^0.11.14
 
 dev_dependencies:
   flutter_lints: ^2.0.0

@@ -185,7 +185,7 @@ class MyApp extends StatelessWidget {
                     iconButtonTheme: IconButtonThemeData(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                          Color(
+                          const Color(
                             0xffc6c9ff,
                           ),
                         ),
@@ -200,7 +200,7 @@ class MyApp extends StatelessWidget {
                     textButtonTheme: TextButtonThemeData(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                          Color(
+                          const Color(
                             0xffc6c9ff,
                           ),
                         ),
