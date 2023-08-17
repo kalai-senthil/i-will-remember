@@ -206,7 +206,7 @@ class NewWidget extends StatelessWidget {
                               InkWell(
                                 onTap:
                                     context.read<AppStore>().setRemainderTone,
-                                child: Icon(
+                                child: const Icon(
                                   Icons.edit_outlined,
                                 ),
                               ),

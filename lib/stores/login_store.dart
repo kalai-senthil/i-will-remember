@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:mobx/mobx.dart';
 part 'login_store.g.dart';
 
@@ -40,7 +39,6 @@ abstract class _LoginStore with Store {
     try {
       isLoggingIn = true;
       await FirebaseAuth.instance.signInWithProvider(GithubAuthProvider());
-    } catch (e) {
     } finally {
       isLoggingIn = false;
     }

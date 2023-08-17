@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
                           if (states.contains(MaterialState.selected)) {
                             return Utils.primaryColor;
                           }
+                          return null;
                         },
                       ),
                       thumbColor: MaterialStateProperty.resolveWith(
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
                           if (states.contains(MaterialState.selected)) {
                             return Utils.lightPrimaryColor;
                           }
+                          return null;
                         },
                       ),
                     ),

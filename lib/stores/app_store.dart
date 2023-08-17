@@ -5,7 +5,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -372,11 +371,11 @@ abstract class _AppStore with Store {
       if (result != null && result.files.isNotEmpty) {
         String docPath = (await getApplicationDocumentsDirectory()).path;
         PlatformFile file = result.files.single;
-        File _file = await File("$docPath/${file.name}").writeAsBytes(
+        File file0 = await File("$docPath/${file.name}").writeAsBytes(
             file.bytes!.toList(),
             flush: true,
             mode: FileMode.write);
-        remainderTone = _file.path;
+        remainderTone = file0.path;
         showToast(ToastEnum.success, "File Selected");
       } else {
         showToast(ToastEnum.error, "Selection Cancelled");

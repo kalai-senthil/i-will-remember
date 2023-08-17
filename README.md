@@ -84,3 +84,7 @@
 ## Day - 13
 
 - Settings Page
+
+## Day - 14
+
+- Rive Login Animation

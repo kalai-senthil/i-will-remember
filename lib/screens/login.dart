@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/ui/input.dart';
 import 'package:remainder/ui/page_header.dart';
-import 'package:remainder/ui/section_header.dart';
 import 'package:remainder/utils.dart';
+import 'package:rive/rive.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -23,6 +22,10 @@ class Login extends StatelessWidget {
               // Login Animation from RIVE
               SizedBox(
                 height: MediaQuery.of(context).size.height / 2.6,
+                child: const RiveAnimation.asset(
+                  "assets/login.riv",
+                  fit: BoxFit.cover,
+                ),
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
