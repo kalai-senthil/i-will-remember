@@ -7,7 +7,7 @@ import 'package:remainder/stores/app_store.dart';
 import 'package:remainder/ui/input.dart';
 import 'package:remainder/ui/page_header.dart';
 import 'package:remainder/utils.dart';
-import 'package:rive/rive.dart';
+import 'package:rive/rive.dart' show RiveAnimation;
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -15,23 +15,37 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Login Animation from RIVE
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 2.6,
-                child: const RiveAnimation.asset(
-                  "assets/login.riv",
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: LoginForm(),
-              ),
+      backgroundColor: Colors.white,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            stops: [0, .6],
+            end: Alignment.bottomLeft,
+            colors: [
+              Utils.primaryColor,
+              Colors.white,
             ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Login Animation from RIVE
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 2.6,
+                  child: const RiveAnimation.asset(
+                    "assets/login.riv",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: LoginForm(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
